@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Event;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<User>
+ * @extends Factory<Event>
  */
-class UserFactory extends Factory
+class EventFactory extends Factory
 {
     /**
      * Define the model's default state.
