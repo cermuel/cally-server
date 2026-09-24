@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unique(['user_id', 'slug']);
             $table->boolean('is_active');
             $table->enum('visibility', ['private', 'public'])->default('public');
+            $table->boolean('is_profile')->default(false);
             $table->unsignedInteger('first_reminder')->nullable();
             $table->unsignedInteger('second_reminder')->nullable();
             $table->unsignedBigInteger('duration_minutes');

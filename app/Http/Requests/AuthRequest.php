@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AuthRequest extends FormRequest
@@ -12,7 +11,7 @@ class AuthRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +21,20 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->filled('email')) {
+            $this->merge([
+                'email' => strtolower(trim($this->input('email'))),
+            ]);
+        }
+        if ($this->isMethod('post')) {
+            return [
+                'email' => ['required', 'email', 'unique:users,email'],
+                'password' => ['required', 'min:4', 'confirmed'],
+            ];
+        }
+
         return [
-            //
+            'email' => ['required', 'email', 'unique:users'],
         ];
     }
 }
