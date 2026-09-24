@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ['name', 'slug', 'user_id', 'color', 'description', 'is_active', 'visibility', 'first_reminder', 'second_reminder', 'duration_minutes', 'pre_meeting_minutes', 'post_meeting_minutes', 'max_meetings_daily'];
+    protected $fillable = ['name', 'slug', 'user_id', 'color', 'description', 'is_active', 'visibility', 'first_reminder', 'second_reminder', 'duration_minutes', 'pre_meeting_minutes', 'post_meeting_minutes', 'max_meetings_daily', 'status'];
     /** @use HasFactory<\Database\Factories\EventFactory> */
     use HasFactory;
 

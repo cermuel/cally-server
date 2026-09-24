@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
-use App\Http\Resources\AuthResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Support\EmailTemplate;
 use Illuminate\Http\Request;
@@ -53,12 +53,12 @@ class AuthController extends Controller
         if ($user->email_verified_at == null) {
             $this->resendVerifyEmail($user);
 
-            return response()->json(['message' => 'Email sent successfully', 'user' => new AuthResource($user)], 200);
+            return response()->json(['message' => 'Email sent successfully', 'user' => new UserResource($user)], 200);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['message' => 'Login successful', 'user' => new AuthResource($user), 'token' => $token]);
+        return response()->json(['message' => 'Login successful', 'user' => new UserResource($user), 'token' => $token]);
     }
 
     public function register(AuthRequest $request)
@@ -74,7 +74,7 @@ class AuthController extends Controller
             $this->resendVerifyEmail($user);
         }
 
-        return response()->json(['message' => 'Email sent successfully', 'user' => new AuthResource($user)], 201);
+        return response()->json(['message' => 'Email sent successfully', 'user' => new UserResource($user)], 201);
     }
 
     public function resendEmail(Request $request)
@@ -89,7 +89,7 @@ class AuthController extends Controller
             $this->resendVerifyEmail($user);
         }
 
-        return response()->json(['message' => 'Email sent successfully', 'user' => new AuthResource($user)], 200);
+        return response()->json(['message' => 'Email sent successfully', 'user' => new UserResource($user)], 200);
     }
 
     public function verifyEmail(Request $request)
@@ -100,18 +100,6 @@ class AuthController extends Controller
 
         $user = User::where('email', $body['email'])->first();
 
-        logger()->info('Email verification check', [
-            'user_found' => (bool) $user,
-            'token_stored' => (bool) $user?->email_token,
-            'expiry_stored' => (bool) $user?->email_token_expires_at,
-            'expired' => $user?->email_token_expires_at
-                ? now()->greaterThan($user->email_token_expires_at)
-                : null,
-            'token_matches' => $user?->email_token && isset($body['token'])
-                ? Hash::check($body['token'], $user->email_token)
-                : null,
-        ]);
-
         if (! $user || ! $user->email_token || ! $user->email_token_expires_at || now()->greaterThan($user->email_token_expires_at) || ! Hash::check($body['token'], $user->email_token)) {
             return response()->json(['message' => 'Invalid or expired token'], 400);
         }
@@ -119,7 +107,7 @@ class AuthController extends Controller
         $user->update(['email_verified_at' => now(), 'email_token' => null, 'email_token_expires_at' => null]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['message' => 'Email verified successfully', 'token' => $token, 'user' => new AuthResource($user)], 201);
+        return response()->json(['message' => 'Email verified successfully', 'token' => $token, 'user' => new UserResource($user)], 201);
     }
 
     public function forgotPassword(Request $request)

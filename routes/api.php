@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,6 +20,11 @@ Route::get('/resend-email', [AuthController::class, 'resendEmail']);
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users/me', [UserController::class, 'profile']);
+    Route::get('/users/check-username', [UserController::class, 'checkUsername']);
+    Route::patch('/users/edit-profile', [UserController::class, 'update']);
+    Route::patch('/users/change-password', [UserController::class, 'changePassword']);
+    Route::patch('/users/complete-onboarding', [UserController::class, 'completeOnboarding']);
 
-    // Route::apiResource('users', UserController::class);
+    Route::apiResource('availability', AvailabilityController::class)->only(['index', 'update', 'store', 'destroy']);
 });

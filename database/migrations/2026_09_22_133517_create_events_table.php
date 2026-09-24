@@ -18,11 +18,12 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->string('name');
             $table->string('slug');
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->text('description')->nullable();
             $table->unique(['user_id', 'slug']);
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->enum('visibility', ['private', 'public'])->default('public');
+            $table->enum('status', ['draft', 'published'])->default('published');
             $table->boolean('is_profile')->default(false);
             $table->unsignedInteger('first_reminder')->nullable();
             $table->unsignedInteger('second_reminder')->nullable();
