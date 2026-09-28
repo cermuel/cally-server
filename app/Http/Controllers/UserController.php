@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,7 +53,7 @@ class UserController extends Controller
     {
         return response()->json([
             'message' => 'Profile fetched successfully',
-            'user' => new UserResource(($request->user()))
+            'user' => new UserResource(($request->user())),
         ]);
     }
 
@@ -64,14 +63,16 @@ class UserController extends Controller
 
         $usernameExists = User::where('username', $body['username'])->first();
 
-        if ($usernameExists)  return response()->json([
-            'message' => 'This username is already taken.',
-            'username' => $body['username']
-        ], 400);
+        if ($usernameExists) {
+            return response()->json([
+                'message' => 'This username is already taken.',
+                'username' => $body['username'],
+            ], 400);
+        }
 
         return response()->json([
             'message' => 'Username available',
-            'username' => $body['username']
+            'username' => $body['username'],
         ]);
     }
 
@@ -101,12 +102,14 @@ class UserController extends Controller
             foreach ($this->meetings as $key => $meeting) {
                 $user->events()->create($meeting);
             }
-            $user->update(['onboarding_completed_at', now()]);
+            $user->update([
+                'onboarding_completed_at' => now(),
+            ]);
         });
 
         return response()->json([
             'message' => 'Onboarding completed successfully',
-            'user' => new UserResource(($request->user()))
+            'user' => new UserResource(($request->user())),
         ]);
     }
 
@@ -114,16 +117,22 @@ class UserController extends Controller
     {
         $body = $request->validate([
             'old_password' => ['required'],
-            'password' => ['required', 'confirmed']
+            'password' => ['required', 'confirmed'],
         ]);
 
-        if ($body['username']) $request->user()->update(['username', $body['username']]);
-        if ($body['name']) $request->user()->update(['name', $body['name']]);
-        if ($body['avatar_url']) $request->user()->update(['avatar_url', $body['avatar_url']]);
+        if ($body['username']) {
+            $request->user()->update(['username', $body['username']]);
+        }
+        if ($body['name']) {
+            $request->user()->update(['name', $body['name']]);
+        }
+        if ($body['avatar_url']) {
+            $request->user()->update(['avatar_url', $body['avatar_url']]);
+        }
 
         return response()->json([
             'message' => 'Profile updated successfully',
-            'user' => new UserResource(($request->user()))
+            'user' => new UserResource(($request->user())),
         ]);
     }
 }

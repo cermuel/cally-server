@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\EventRequest;
+use App\Models\Event;
+use Illuminate\Http\Request;
+
+class LinkController extends Controller
+{
+    public function index(Request $request)
+    {
+        $user = $request->user();
+
+        $links = Event::where('user_id', $user->id)->latest()->where('is_profile', true)->filter(request(['search']))->get();
+
+        return response()->json(['links' => $links, 'message' => 'Links fetched successfully']);
+    }
+
+    public function store(EventRequest $request)
+    {
+        $body = $request->validated();
+        $user = $request->user();
+
+        $body['is_profile'] = true;
+
+        $link = $user->events()->create($body);
+
+        return response()->json(['link' => $link, 'message' => 'Link created successfully'], 201);
+    }
+
+    public function show(string $id)
+    {
+        $link = Event::where('id', $id)->where('is_profile', true)->first();
+
+        if (! $link) {
+            return response()->json(['message' => 'Link not found'], 404);
+        }
+
+        return response()->json(['link' => $link, 'message' => 'Link updated successfully']);
+    }
+
+    public function update(EventRequest $request, string $id)
+    {
+        $body = $request->validated();
+
+        $link = Event::where('id', $id)->where('is_profile', true)->first();
+
+        if (!$link) {
+            return response()->json(['message' => 'Link not found'], 404);
+        }
+
+        $link->update($body);
+
+        return response()->json(['link' => $link, 'message' => 'Link updated successfully']);
+    }
+
+    public function destroy(string $id)
+    {
+        $link = Event::where('id', $id)->where('is_profile', true)->first();
+
+        $link = Event::where('id', $id)->where('is_profile', true)->first();
+
+        if (! $link) {
+            return response()->json(['message' => 'Link delered successfully']);
+        }
+        $link->delete();
+
+        return response()->json(['message' => 'Link delered successfully']);
+    }
+}

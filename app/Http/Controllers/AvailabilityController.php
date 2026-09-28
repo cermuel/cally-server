@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class AvailabilityController extends Controller
 {
-
     public function index(Request $request)
     {
         $availabilities = Availability::where('user_id', $request->user()->id)->all();
@@ -25,7 +24,7 @@ class AvailabilityController extends Controller
         $count = Availability::where('day', $body['day'])->count();
 
         if ($count >= 4) {
-            return response()->json(['message' => 'Max time schedule reached for ' . $body['day']]);
+            return response()->json(['message' => 'Max time schedule reached for '.$body['day']]);
         }
 
         $availability = $user->availabilities()->create($body);
@@ -33,18 +32,20 @@ class AvailabilityController extends Controller
         return response()->json(['message' => 'Availabilitiy created successfully', 'availability' => $availability]);
     }
 
-
     public function update(AvailabilityRequest $request, string $id)
     {
         $body = $request->validated();
 
         $availability = Availability::where('id', $id)->first();
 
+        if (! $availability) {
+            return response()->json(['message' => 'Availability not found'], 404);
+        }
+
         $availability->update($body);
 
         return response()->json(['message' => 'Availabilitiy updated successfully', 'availability' => $availability]);
     }
-
 
     public function destroy(string $id)
     {

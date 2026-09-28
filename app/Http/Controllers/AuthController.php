@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\ResetPasswordEmailJob;
+use App\Jobs\VerifyEmailJob;
 use App\Models\User;
-use App\Support\EmailTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Resend\Laravel\Facades\Resend;
 
 class AuthController extends Controller
 {
@@ -24,15 +24,7 @@ class AuthController extends Controller
 
         if ($user->email_verified_at !== null) return;
         $user->update(['email_token' => $emailTokenHashed, 'email_token_expires_at' => $emailExpiresAt]);
-        Resend::emails()->send([
-            'from' => 'Cally <cally@cermuel.dev>',
-            'to' => [$user->email],
-            'subject' => 'You are one step away',
-            'html' => EmailTemplate::verifyEmail(
-                verifyUrl: $verifyUrl,
-                expiresIn: 'one hour',
-            ),
-        ]);
+        VerifyEmailJob::dispatch($user->email, $verifyUrl);
     }
 
     public function login(Request $request)
@@ -129,16 +121,7 @@ class AuthController extends Controller
 
             $user->update(['reset_password_token' => $resetPasswordTokenHashed, 'reset_password_token_expires_at' => $resetPasswordExpiresAt]);
 
-            Resend::emails()->send([
-                'from' => 'Cally <cally@cermuel.dev>',
-                'to' => [$user->email],
-                'subject' => 'Reset password',
-                'html' => EmailTemplate::resetPassword(
-                    name: $user->name,
-                    resetUrl: $resetPasswordUrl,
-                    expiresIn: 'one hour',
-                ),
-            ]);
+            ResetPasswordEmailJob::dispatch($user->email, $user->name, $resetPasswordUrl)->onQueue('email');
         }
 
         return response()->json(['message' => 'Reset email sent successfully']);
