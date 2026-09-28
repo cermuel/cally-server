@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LinkController extends Controller
 {
@@ -26,6 +27,8 @@ class LinkController extends Controller
 
         $link = $user->events()->create($body);
 
+        Cache::delete("public-profile-{$user->username}-events");
+
         return response()->json(['link' => $link, 'message' => 'Link created successfully'], 201);
     }
 
@@ -43,6 +46,7 @@ class LinkController extends Controller
     public function update(EventRequest $request, string $id)
     {
         $body = $request->validated();
+        $user = $request->user();
 
         $link = Event::where('id', $id)->where('is_profile', true)->first();
 
@@ -52,19 +56,21 @@ class LinkController extends Controller
 
         $link->update($body);
 
+        Cache::forget("public-profile-{$user->username}-events");
+
         return response()->json(['link' => $link, 'message' => 'Link updated successfully']);
     }
 
     public function destroy(string $id)
     {
-        $link = Event::where('id', $id)->where('is_profile', true)->first();
-
-        $link = Event::where('id', $id)->where('is_profile', true)->first();
+        $link = Event::where('id', $id)->with('user')->where('is_profile', true)->first();
 
         if (! $link) {
             return response()->json(['message' => 'Link delered successfully']);
         }
         $link->delete();
+
+        Cache::forget("public-profile-{$link->user->username}-events");
 
         return response()->json(['message' => 'Link delered successfully']);
     }

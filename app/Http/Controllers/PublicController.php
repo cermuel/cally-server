@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PublicController extends Controller
 {
@@ -18,20 +19,30 @@ class PublicController extends Controller
             'username' => ['required', 'string'],
         ]);
 
-        $user = User::with(['events' => function ($query): void {
-            $query
-                ->where('is_active', true)
-                ->where('status', 'published')
-                ->where('is_profile', true);
-        }])->where('username', $body['username'])->first();
+        $username = strtolower($body['username']);
 
-        if (! $user) {
+
+        $user = Cache::remember("public-profile-{$username}", 60 * 60, function () use ($username) {
+            $user =   User::with(['events' => function ($query): void {
+                $query
+                    ->where('is_active', true)
+                    ->where('status', 'published')
+                    ->where('is_profile', true);
+            }])->where('username', $username)->first();
+            if (!$user) {
+                return null;
+            }
+
+            return (new UserResource($user))->resolve();
+        });
+
+        if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
         return response()->json([
             'message' => 'Profile fetched successfully',
-            'user' => new UserResource($user),
+            'user' => $user,
         ], 200);
     }
 
@@ -39,16 +50,19 @@ class PublicController extends Controller
     {
         $user = User::where('username', $username)->first();
 
-        if (! $user) {
+        if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        $events = $user->events()
-            ->where('is_active', true)
-            ->where('status', 'published')
-            ->where('is_profile', true)
-            ->where('visibility', 'public')
-            ->get();
+        $events = Cache::remember("public-profile-{$user->username}-events", 60 * 60, function () use ($user) {
+            return $user->events()
+                ->where('is_active', true)
+                ->where('status', 'published')
+                ->where('is_profile', true)
+                ->where('visibility', 'public')
+                ->get()
+                ->toArray();
+        });
 
         return response()->json([
             'message' => 'Events fetched successfully',
