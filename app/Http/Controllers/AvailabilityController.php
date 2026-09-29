@@ -10,7 +10,7 @@ class AvailabilityController extends Controller
 {
     public function index(Request $request)
     {
-        $availabilities = Availability::where('user_id', $request->user()->id)->all();
+        $availabilities = Availability::where('user_id', $request->user()->id)->get();
 
         return response()->json(['message' => 'Availabilities fetched successfully', 'availabilities' => $availabilities]);
     }
@@ -24,7 +24,7 @@ class AvailabilityController extends Controller
         $count = Availability::where('day', $body['day'])->count();
 
         if ($count >= 4) {
-            return response()->json(['message' => 'Max time schedule reached for '.$body['day']]);
+            return response()->json(['message' => 'Max time schedule reached for ' . $body['day']]);
         }
 
         $availability = $user->availabilities()->create($body);
