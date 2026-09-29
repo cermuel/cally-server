@@ -18,7 +18,7 @@
                             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
                                     <td style="padding-right:10px;">
-                                        <img src="https://cdn.ipaslogo.com/display-512/d574eb13244e7806-alpaca-7.webp" width="32" height="32" alt="Cally" style="display:block;border-radius:8px;border:0;">
+                                        <img src="https://cally.cermuel.dev/logo.png" width="32" height="32" alt="Cally" style="display:block;border-radius:8px;border:0;">
                                     </td>
                                     <td style="font-size:16px;font-weight:600;color:#09090b;letter-spacing:-0.01em;">Cally</td>
                                 </tr>

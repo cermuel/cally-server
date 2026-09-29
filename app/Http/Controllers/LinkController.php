@@ -68,7 +68,7 @@ class LinkController extends Controller
         if (! $link) {
             return response()->json(['message' => 'Link delered successfully']);
         }
-        $link->delete();
+        $link->forceDelete();
 
         Cache::forget("public-profile-{$link->user->username}-events");
 

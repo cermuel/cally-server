@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'email_verified_at' => $this->email_verified_at,
             'onboarding_completed_at' => $this->onboarding_completed_at,
             'timezone' => $this->timezone,
+            'description' => $this->description
         ];
     }
 }

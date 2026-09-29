@@ -23,6 +23,7 @@ class UserController extends Controller
             'is_profile' => true,
             'pre_meeting_minutes' => 5,
             'post_meeting_minutes' => 5,
+            'color' => '#fff09a'
         ],
         [
             'name' => '30 min meeting',
@@ -35,6 +36,7 @@ class UserController extends Controller
             'is_profile' => true,
             'pre_meeting_minutes' => 5,
             'post_meeting_minutes' => 5,
+            'color' => '#c0a8ff'
         ],
         [
             'name' => 'Private meeting',
@@ -47,6 +49,7 @@ class UserController extends Controller
             'is_profile' => false,
             'pre_meeting_minutes' => 5,
             'post_meeting_minutes' => 5,
+            'color' => '#cdd2dc'
         ],
     ];
 
