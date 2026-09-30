@@ -50,7 +50,7 @@ class LinkController extends Controller
 
         $link = Event::where('id', $id)->where('is_profile', true)->first();
 
-        if (!$link) {
+        if (! $link) {
             return response()->json(['message' => 'Link not found'], 404);
         }
 
@@ -66,12 +66,12 @@ class LinkController extends Controller
         $link = Event::where('id', $id)->with('user')->where('is_profile', true)->first();
 
         if (! $link) {
-            return response()->json(['message' => 'Link delered successfully']);
+            return response()->json(['message' => 'Link deleted successfully']);
         }
         $link->forceDelete();
 
         Cache::forget("public-profile-{$link->user->username}-events");
 
-        return response()->json(['message' => 'Link delered successfully']);
+        return response()->json(['message' => 'Link deleted successfully']);
     }
 }

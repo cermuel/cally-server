@@ -2,17 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\GuestStatus;
+use App\Http\Requests\PublicScheduleRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\ConfirmGuestJob;
+use App\Jobs\InviteGuestJob;
 use App\Models\Booking;
 use App\Models\Event;
+use App\Models\Guest;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
+    public function schedule(PublicScheduleRequest $request): JsonResponse
+    {
+        $body = $request->validated();
+
+        [$booking, $guests] = DB::transaction(function () use ($body): array {
+            $user = User::where('username', $body['username'])->firstOrFail();
+            $startsAt = isset($body['starts_at'])
+                ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'].' '.$body['starts_at'], $user->timezone)->utc()
+                : null;
+            $endsAt = isset($body['ends_at'])
+                ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'].' '.$body['ends_at'], $user->timezone)->utc()
+                : null;
+
+            $booking = Booking::create([
+                'user_id' => $user->id,
+                'event_id' => $body['event_id'],
+                'starts_at' => $startsAt,
+                'ends_at' => $endsAt,
+                'notes' => $body['notes'] ?? null,
+            ]);
+
+            $guests = collect($body['guests'])->map(function (array $guest) use ($booking): Guest {
+                $guest['name'] ??= 'there';
+                $guest['attendance_status'] ??= GuestStatus::Pending->value;
+
+                return $booking->guests()->create($guest);
+            });
+
+            $booking->load('user');
+            $this->dispatchGuestEmailBatches($booking, $guests);
+            $booking->unsetRelation('user');
+
+            return [$booking, $guests];
+        });
+
+        return response()->json([
+            'message' => 'Booking scheduled successfully',
+            'booking' => $booking,
+            'guests' => $guests,
+        ], 201);
+    }
+
     public function getProfile(Request $request): JsonResponse
     {
         $body = $request->validate([
@@ -21,22 +71,21 @@ class PublicController extends Controller
 
         $username = strtolower($body['username']);
 
-
         $user = Cache::remember("public-profile-{$username}", 60 * 60, function () use ($username) {
-            $user =   User::with(['events' => function ($query): void {
+            $user = User::with(['events' => function ($query): void {
                 $query
                     ->where('is_active', true)
                     ->where('status', 'published')
                     ->where('is_profile', true);
             }])->where('username', $username)->first();
-            if (!$user) {
+            if (! $user) {
                 return null;
             }
 
             return (new UserResource($user))->resolve();
         });
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -50,7 +99,7 @@ class PublicController extends Controller
     {
         $user = User::where('username', $username)->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -200,5 +249,51 @@ class PublicController extends Controller
             ->addMinutes((int) ($booking->event?->post_meeting_minutes ?? 0));
 
         return $blockedStart->lte($date->endOfDay()) && $blockedEnd->gte($date->startOfDay());
+    }
+
+    /**
+     * @param  Collection<int, Guest>  $guests
+     */
+    private function dispatchGuestEmailBatches(Booking $booking, Collection $guests): void
+    {
+        $frontendUrl = config('services.frontend_url');
+        $hostName = $booking->user->name ?? 'Host';
+        $meetingTime = $booking->starts_at?->format('H:i') ?? '';
+        $invitationPath = $frontendUrl.'/public/'.$booking->id.'/request';
+        $confirmationPath = $frontendUrl.'/public/'.$booking->id;
+
+        $invitationJobs = $guests
+            ->where('attendance_status', GuestStatus::Pending)
+            ->map(fn (Guest $guest): InviteGuestJob => new InviteGuestJob(
+                $hostName,
+                $guest->email,
+                $meetingTime,
+                $invitationPath.'?email='.urlencode($guest->email),
+                $guest->name ?? 'there',
+            ));
+
+        if ($invitationJobs->isNotEmpty()) {
+            Bus::batch($invitationJobs)
+                ->name('meeting-invite')
+                ->onQueue('meeting-invite')
+                ->dispatch();
+        }
+
+        $confirmationJobs = $guests
+            ->where('attendance_status', GuestStatus::Confirmed)
+            ->map(fn (Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
+                $hostName,
+                $guest->email,
+                $meetingTime,
+                $confirmationPath.'?email='.urlencode($guest->email),
+                $guest->name ?? 'there',
+            ));
+
+        if ($confirmationJobs->isNotEmpty()) {
+            Bus::batch($confirmationJobs)
+                ->name('meeting-confirm')
+                ->onQueue('meeting-confirm')
+                ->dispatch();
+        }
     }
 }

@@ -29,4 +29,22 @@ if (app()->isLocal()) {
             dashboardUrl: rtrim((string) config('services.frontend_url'), '/').'/dashboard',
         );
     });
+
+    Route::get('/dev/email/booking-invitation', function () {
+        return EmailTemplate::bookingInvitation(
+            name: null,
+            hostName: 'Alex Morgan',
+            meetingTime: 'Thursday, 8 October at 2:30 PM BST',
+            invitationUrl: rtrim((string) config('services.frontend_url'), '/').'/invitations/preview-invitation',
+        );
+    });
+
+    Route::get('/dev/email/booking-confirmation', function () {
+        return EmailTemplate::bookingConfirmation(
+            name: 'Shady',
+            hostName: 'Alex Morgan',
+            meetingTime: 'Thursday, 8 October at 2:30 PM BST',
+            bookingUrl: rtrim((string) config('services.frontend_url'), '/').'/bookings/preview-booking',
+        );
+    });
 }

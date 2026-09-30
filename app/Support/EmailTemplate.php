@@ -42,4 +42,38 @@ class EmailTemplate
             'dashboardUrl' => $dashboardUrl,
         ])->render();
     }
+
+    /**
+     * Render a booking invitation email.
+     */
+    public static function bookingInvitation(
+        string $hostName,
+        string $meetingTime,
+        string $invitationUrl,
+        ?string $name = null,
+    ): string {
+        return view('emails.booking-invitation', [
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'hostName' => $hostName,
+            'meetingTime' => $meetingTime,
+            'invitationUrl' => $invitationUrl,
+        ])->render();
+    }
+
+    /**
+     * Render a booking confirmation email.
+     */
+    public static function bookingConfirmation(
+        string $name,
+        string $hostName,
+        string $meetingTime,
+        string $bookingUrl,
+    ): string {
+        return view('emails.booking-confirmation', [
+            'name' => $name,
+            'hostName' => $hostName,
+            'meetingTime' => $meetingTime,
+            'bookingUrl' => $bookingUrl,
+        ])->render();
+    }
 }

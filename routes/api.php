@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
@@ -24,6 +26,11 @@ Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 Route::get('/public/profile', [PublicController::class, 'getProfile']);
 Route::get('/public/{username}/events', [PublicController::class, 'getEvents']);
 Route::get('/public/events/{event}/schedule', [PublicController::class, 'getUserSchedule']);
+Route::post('/public/schedule', [PublicController::class, 'schedule']);
+
+Route::get('/bookings/details/{id}', [BookingController::class, 'getBookingDetails']);
+Route::get('/guest/{email}', [GuestController::class, 'guestByEmail']);
+Route::apiResource('guests', GuestController::class)->only(['index', 'update', 'store', 'destroy']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/me', [UserController::class, 'profile']);
@@ -34,4 +41,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('availability', AvailabilityController::class)->only(['index', 'update', 'store', 'destroy']);
     Route::apiResource('links', LinkController::class);
+    Route::apiResource('bookings', BookingController::class);
 });
