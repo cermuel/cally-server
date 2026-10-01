@@ -29,6 +29,7 @@ class LinkController extends Controller
 
         Cache::delete("public-profile-{$user->username}-events");
 
+
         return response()->json(['link' => $link, 'message' => 'Link created successfully'], 201);
     }
 

@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Event\Code\Throwable;
 
 class PublicController extends Controller
 {
@@ -25,36 +26,62 @@ class PublicController extends Controller
     {
         $body = $request->validated();
 
-        [$booking, $guests] = DB::transaction(function () use ($body): array {
-            $user = User::where('username', $body['username'])->firstOrFail();
-            $startsAt = isset($body['starts_at'])
-                ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'].' '.$body['starts_at'], $user->timezone)->utc()
-                : null;
-            $endsAt = isset($body['ends_at'])
-                ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'].' '.$body['ends_at'], $user->timezone)->utc()
-                : null;
+        $lock = Cache::lock('booking-event-' . $body['event_id'] . 'starts-' . $body['date'] . '-' . $body['starts_at'], 10);
 
-            $booking = Booking::create([
-                'user_id' => $user->id,
-                'event_id' => $body['event_id'],
-                'starts_at' => $startsAt,
-                'ends_at' => $endsAt,
-                'notes' => $body['notes'] ?? null,
-            ]);
 
-            $guests = collect($body['guests'])->map(function (array $guest) use ($booking): Guest {
-                $guest['name'] ??= 'there';
-                $guest['attendance_status'] ??= GuestStatus::Pending->value;
+        if (!$lock->get()) {
+            return response()->json([
+                'message' => 'This slot is currently reserved. Please try again.',
+            ], 423);
+        }
 
-                return $booking->guests()->create($guest);
+        try {
+            [$booking, $guests] = DB::transaction(function () use ($body): array {
+                $user = User::where('username', $body['username'])->firstOrFail();
+
+                $startsAt = isset($body['starts_at'])
+                    ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'] . ' ' . $body['starts_at'], $user->timezone)->utc()
+                    : null;
+                $endsAt = isset($body['ends_at'])
+                    ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'] . ' ' . $body['ends_at'], $user->timezone)->utc()
+                    : null;
+
+                if ($startsAt && $endsAt) {
+                    $bookingExists = Booking::where('user_id', $user->id)
+                        ->where('status', '!=', 'cancelled')
+                        ->whereNotNull('starts_at')
+                        ->whereNotNull('ends_at')
+                        ->where('starts_at', '<', $endsAt)
+                        ->where('ends_at', '>', $startsAt)
+                        ->exists();
+
+                    if ($bookingExists) abort(409, 'This time is already reserved for another meeting.');;
+                }
+
+                $booking = Booking::create([
+                    'user_id' => $user->id,
+                    'event_id' => $body['event_id'],
+                    'starts_at' => $startsAt,
+                    'ends_at' => $endsAt,
+                    'notes' => $body['notes'] ?? null,
+                ]);
+
+                $guests = collect($body['guests'])->map(function (array $guest) use ($booking): Guest {
+                    $guest['name'] ??= 'there';
+                    $guest['attendance_status'] ??= GuestStatus::Pending->value;
+
+                    return $booking->guests()->create($guest);
+                });
+
+                $booking->load('user');
+                $this->dispatchGuestEmailBatches($booking, $guests);
+                $booking->unsetRelation('user');
+
+                return [$booking, $guests];
             });
-
-            $booking->load('user');
-            $this->dispatchGuestEmailBatches($booking, $guests);
-            $booking->unsetRelation('user');
-
-            return [$booking, $guests];
-        });
+        } finally {
+            $lock->release();
+        }
 
         return response()->json([
             'message' => 'Booking scheduled successfully',
@@ -72,12 +99,7 @@ class PublicController extends Controller
         $username = strtolower($body['username']);
 
         $user = Cache::remember("public-profile-{$username}", 60 * 60, function () use ($username) {
-            $user = User::with(['events' => function ($query): void {
-                $query
-                    ->where('is_active', true)
-                    ->where('status', 'published')
-                    ->where('is_profile', true);
-            }])->where('username', $username)->first();
+            $user = User::where('username', $username)->first();
             if (! $user) {
                 return null;
             }
@@ -97,14 +119,21 @@ class PublicController extends Controller
 
     public function getEvents(string $username): JsonResponse
     {
-        $user = User::where('username', $username)->first();
+        $user = Cache::remember("public-profile-username-{$username}", 60 * 60, function () use ($username) {
+            $user = User::where('username', $username)->first();
+            if (!$user) {
+                return null;
+            }
+            return $user;
+        });
 
-        if (! $user) {
+        if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        $events = Cache::remember("public-profile-{$user->username}-events", 60 * 60, function () use ($user) {
-            return $user->events()
+        $events = Cache::remember("public-profile-{$username}-events", 60 * 60, function () use ($user) {
+
+            return Event::where('user_id', $user['id'])
                 ->where('is_active', true)
                 ->where('status', 'published')
                 ->where('is_profile', true)
@@ -259,16 +288,16 @@ class PublicController extends Controller
         $frontendUrl = config('services.frontend_url');
         $hostName = $booking->user->name ?? 'Host';
         $meetingTime = $booking->starts_at?->format('H:i') ?? '';
-        $invitationPath = $frontendUrl.'/public/'.$booking->id.'/request';
-        $confirmationPath = $frontendUrl.'/public/'.$booking->id;
+        $invitationPath = $frontendUrl . '/public/' . $booking->id . '/request';
+        $confirmationPath = $frontendUrl . '/public/' . $booking->id;
 
         $invitationJobs = $guests
             ->where('attendance_status', GuestStatus::Pending)
-            ->map(fn (Guest $guest): InviteGuestJob => new InviteGuestJob(
+            ->map(fn(Guest $guest): InviteGuestJob => new InviteGuestJob(
                 $hostName,
                 $guest->email,
                 $meetingTime,
-                $invitationPath.'?email='.urlencode($guest->email),
+                $invitationPath . '?email=' . urlencode($guest->email),
                 $guest->name ?? 'there',
             ));
 
@@ -281,11 +310,11 @@ class PublicController extends Controller
 
         $confirmationJobs = $guests
             ->where('attendance_status', GuestStatus::Confirmed)
-            ->map(fn (Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
+            ->map(fn(Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
                 $hostName,
                 $guest->email,
                 $meetingTime,
-                $confirmationPath.'?email='.urlencode($guest->email),
+                $confirmationPath . '?email=' . urlencode($guest->email),
                 $guest->name ?? 'there',
             ));
 

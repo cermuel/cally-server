@@ -87,6 +87,7 @@ class UserController extends Controller
         $user->update($request->validated());
 
         Cache::forget("public-profile-{$user->username}");
+        Cache::forget("public-profile-username-{$user->username}");
 
         return response()->json([
             'message' => 'Profile updated successfully',
@@ -135,6 +136,11 @@ class UserController extends Controller
         if ($body['avatar_url']) {
             $request->user()->update(['avatar_url', $body['avatar_url']]);
         }
+
+        $user = $request->user();
+
+        Cache::forget("public-profile-{$user->username}");
+        Cache::forget("public-profile-username-{$user->username}");
 
         return response()->json([
             'message' => 'Profile updated successfully',
