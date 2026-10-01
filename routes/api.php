@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\PublicController;
@@ -23,6 +25,11 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/resend-email', [AuthController::class, 'resendEmail']);
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
 
+Route::get('/google/redirect', [GoogleAuthController::class, 'redirect']);
+Route::get('/google/callback', [GoogleAuthController::class, 'callback']);
+
+Route::middleware('auth:sanctum')->get('/connections/google/redirect', [GoogleAuthController::class, 'connectionRedirect']);
+
 Route::get('/public/profile', [PublicController::class, 'getProfile']);
 Route::get('/public/{username}/events', [PublicController::class, 'getEvents']);
 Route::get('/public/events/{event}/schedule', [PublicController::class, 'getUserSchedule']);
@@ -40,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/users/complete-onboarding', [UserController::class, 'completeOnboarding']);
 
     Route::apiResource('availability', AvailabilityController::class)->only(['index', 'update', 'store', 'destroy']);
+    Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
     Route::apiResource('bookings', BookingController::class);
 });

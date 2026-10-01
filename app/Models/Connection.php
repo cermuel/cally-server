@@ -11,8 +11,9 @@ class Connection extends Model
         'access_token' => 'encrypted',
         'refresh_token' => 'encrypted',
         'token_expires_at' => 'datetime',
+        'scopes' => 'array',
     ];
-    protected $fillable = ['user_id', 'provider', 'provider_account_id', 'email', 'access_token', 'refresh_token', 'token_expires_at', 'calendar_id'];
+    protected $fillable = ['user_id', 'provider', 'provider_account_id', 'email', 'access_token', 'refresh_token', 'token_expires_at', 'calendar_id', 'scopes'];
     /** @use HasFactory<\Database\Factories\ConnectionFactory> */
     use HasFactory;
 

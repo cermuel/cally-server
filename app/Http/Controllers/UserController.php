@@ -67,7 +67,7 @@ class UserController extends Controller
 
         $usernameExists = User::where('username', $body['username'])->first();
 
-        if ($usernameExists) {
+        if ($usernameExists || $body['username'] == 'privacy' || $body['username'] == 'terms') {
             return response()->json([
                 'message' => 'This username is already taken.',
                 'username' => $body['username'],
@@ -101,14 +101,15 @@ class UserController extends Controller
         $user = $request->user();
         if ($user->onboarding_completed_at) {
             return response()->json([
-                'message' => 'Onboarding has already been completed.',
-            ], 409);
+                'message' => 'Onboarding completed successfully',
+                'user' => new UserResource(($request->user())),
+            ]);
         }
 
         DB::transaction(function () use ($user) {
-            foreach ($this->meetings as $key => $meeting) {
-                $user->events()->create($meeting);
-            }
+            // foreach ($this->meetings as $key => $meeting) {
+            //     $user->events()->create($meeting);
+            // }
             $user->update([
                 'onboarding_completed_at' => now(),
             ]);
