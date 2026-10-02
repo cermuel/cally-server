@@ -1,0 +1,2370 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/login
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      email: gbailey@example.net
+      password: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/register
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Must be at least 4 characters.'
+        required: true
+        example: '+-0pBNvYgxwmi/#iw'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      email: gbailey@example.net
+      password: '+-0pBNvYgxwmi/#iw'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/forgot-password
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      email: gbailey@example.net
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/reset-password
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Must be at least 4 characters.'
+        required: true
+        example: '+-0pBNvYgxwmi/#iw'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      token:
+        custom: []
+        name: token
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      email: gbailey@example.net
+      password: '+-0pBNvYgxwmi/#iw'
+      token: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/resend-email
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/verify-email
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/google/redirect
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"url":"https:\/\/accounts.google.com\/o\/oauth2\/v2\/auth?response_type=code&access_type=offline&client_id=225052266942-u379026b7u3ur0h7ip383ltpm8hvoesg.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi%2Fgoogle%2Fcallback&state=eyJpdiI6IkNzOWEwUndZWTJGZFlNU2Z0RmpZYlE9PSIsInZhbHVlIjoibTRWbkFyeVFkMDJXZVMvTTlDdkc2U0VRRmNjOGpYS044TjQ4aVFxeXNXYz0iLCJtYWMiOiJiMjc0MmFiZDdlZTBhZWU3NWVkZjllN2IxNzYzMmY4ZGYxMTZkNmQ4ZjQ4Y2FiYzk3MTEzNmQxN2Y3MjQxNTA1IiwidGFnIjoiIn0%3D&scope=openid%20email%20profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events&prompt=consent"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/google/callback
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/connections/google/redirect
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/public/profile
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      username:
+        custom: []
+        name: username
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      username: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: '{"message":"User not found"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/public/{username}/events'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      username:
+        custom: []
+        name: username
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      username: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: '{"message":"User not found"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/public/events/{event_id}/schedule'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      event_id:
+        custom: []
+        name: event_id
+        description: 'The ID of the event.'
+        required: true
+        example: 14
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      event_id: 14
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      month:
+        custom: []
+        name: month
+        description: 'Must be a valid date in the format <code>Y-m</code>.'
+        required: true
+        example: 2026-10
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      month: 2026-10
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"message":"Schedule fetched successfully","schedules":{"2026-10-01":[],"2026-10-02":[{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-03":[{"time":"08:25"},{"time":"08:30"},{"time":"08:35"},{"time":"08:40"},{"time":"08:45"},{"time":"08:50"},{"time":"08:55"},{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"},{"time":"16:05"},{"time":"16:10"},{"time":"16:15"},{"time":"16:20"},{"time":"16:25"},{"time":"16:30"},{"time":"16:35"},{"time":"16:40"},{"time":"16:45"},{"time":"16:50"},{"time":"16:55"},{"time":"17:00"},{"time":"17:05"},{"time":"17:10"},{"time":"17:15"},{"time":"17:20"},{"time":"17:25"},{"time":"17:30"},{"time":"17:35"},{"time":"17:40"},{"time":"17:45"},{"time":"17:50"},{"time":"17:55"},{"time":"18:00"},{"time":"18:05"},{"time":"18:10"},{"time":"18:15"},{"time":"18:20"},{"time":"18:25"},{"time":"18:30"},{"time":"18:35"},{"time":"18:40"},{"time":"18:45"},{"time":"18:50"},{"time":"18:55"},{"time":"19:00"},{"time":"19:05"},{"time":"19:10"},{"time":"19:15"},{"time":"19:20"},{"time":"19:25"},{"time":"19:30"},{"time":"19:35"},{"time":"19:40"},{"time":"19:45"},{"time":"19:50"},{"time":"19:55"},{"time":"20:00"},{"time":"20:05"},{"time":"20:10"},{"time":"20:15"},{"time":"20:20"},{"time":"20:25"},{"time":"20:30"},{"time":"20:35"},{"time":"20:40"},{"time":"20:45"},{"time":"20:50"},{"time":"20:55"},{"time":"21:00"},{"time":"21:05"},{"time":"21:10"},{"time":"21:15"},{"time":"21:20"},{"time":"21:25"},{"time":"21:30"},{"time":"21:35"},{"time":"21:40"},{"time":"21:45"},{"time":"21:50"},{"time":"21:55"},{"time":"22:00"}],"2026-10-04":[],"2026-10-05":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-06":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-07":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-08":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-09":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-10":[{"time":"07:00"},{"time":"07:05"},{"time":"07:10"},{"time":"07:15"},{"time":"07:20"},{"time":"07:25"},{"time":"07:30"},{"time":"07:35"},{"time":"07:40"},{"time":"07:45"},{"time":"07:50"},{"time":"07:55"},{"time":"08:00"},{"time":"08:05"},{"time":"08:10"},{"time":"08:15"},{"time":"08:20"},{"time":"08:25"},{"time":"08:30"},{"time":"08:35"},{"time":"08:40"},{"time":"08:45"},{"time":"08:50"},{"time":"08:55"},{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"},{"time":"16:05"},{"time":"16:10"},{"time":"16:15"},{"time":"16:20"},{"time":"16:25"},{"time":"16:30"},{"time":"16:35"},{"time":"16:40"},{"time":"16:45"},{"time":"16:50"},{"time":"16:55"},{"time":"17:00"},{"time":"17:05"},{"time":"17:10"},{"time":"17:15"},{"time":"17:20"},{"time":"17:25"},{"time":"17:30"},{"time":"17:35"},{"time":"17:40"},{"time":"17:45"},{"time":"17:50"},{"time":"17:55"},{"time":"18:00"},{"time":"18:05"},{"time":"18:10"},{"time":"18:15"},{"time":"18:20"},{"time":"18:25"},{"time":"18:30"},{"time":"18:35"},{"time":"18:40"},{"time":"18:45"},{"time":"18:50"},{"time":"18:55"},{"time":"19:00"},{"time":"19:05"},{"time":"19:10"},{"time":"19:15"},{"time":"19:20"},{"time":"19:25"},{"time":"19:30"},{"time":"19:35"},{"time":"19:40"},{"time":"19:45"},{"time":"19:50"},{"time":"19:55"},{"time":"20:00"},{"time":"20:05"},{"time":"20:10"},{"time":"20:15"},{"time":"20:20"},{"time":"20:25"},{"time":"20:30"},{"time":"20:35"},{"time":"20:40"},{"time":"20:45"},{"time":"20:50"},{"time":"20:55"},{"time":"21:00"},{"time":"21:05"},{"time":"21:10"},{"time":"21:15"},{"time":"21:20"},{"time":"21:25"},{"time":"21:30"},{"time":"21:35"},{"time":"21:40"},{"time":"21:45"},{"time":"21:50"},{"time":"21:55"},{"time":"22:00"}],"2026-10-11":[],"2026-10-12":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-13":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-14":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-15":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-16":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-17":[{"time":"08:05"},{"time":"08:10"},{"time":"08:15"},{"time":"08:20"},{"time":"08:25"},{"time":"08:30"},{"time":"08:35"},{"time":"08:40"},{"time":"08:45"},{"time":"08:50"},{"time":"08:55"},{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"},{"time":"16:05"},{"time":"16:10"},{"time":"16:15"},{"time":"16:20"},{"time":"16:25"},{"time":"16:30"},{"time":"16:35"},{"time":"16:40"},{"time":"16:45"},{"time":"16:50"},{"time":"16:55"},{"time":"17:00"},{"time":"17:05"},{"time":"17:10"},{"time":"17:15"},{"time":"17:20"},{"time":"17:25"},{"time":"17:30"},{"time":"17:35"},{"time":"17:40"},{"time":"17:45"},{"time":"17:50"},{"time":"17:55"},{"time":"18:00"},{"time":"18:05"},{"time":"18:10"},{"time":"18:15"},{"time":"18:20"},{"time":"18:25"},{"time":"18:30"},{"time":"18:35"},{"time":"18:40"},{"time":"18:45"},{"time":"18:50"},{"time":"18:55"},{"time":"19:00"},{"time":"19:05"},{"time":"19:10"},{"time":"19:15"},{"time":"19:20"},{"time":"19:25"},{"time":"19:30"},{"time":"19:35"},{"time":"19:40"},{"time":"19:45"},{"time":"19:50"},{"time":"19:55"},{"time":"20:00"},{"time":"20:05"},{"time":"20:10"},{"time":"20:15"},{"time":"20:20"},{"time":"20:25"},{"time":"20:30"},{"time":"20:35"},{"time":"20:40"},{"time":"20:45"},{"time":"20:50"},{"time":"20:55"},{"time":"21:00"},{"time":"21:05"},{"time":"21:10"},{"time":"21:15"},{"time":"21:20"},{"time":"21:25"},{"time":"21:30"},{"time":"21:35"},{"time":"21:40"},{"time":"21:45"},{"time":"21:50"},{"time":"21:55"},{"time":"22:00"}],"2026-10-18":[],"2026-10-19":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-20":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-21":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-22":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-23":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-24":[{"time":"07:00"},{"time":"07:05"},{"time":"07:10"},{"time":"07:15"},{"time":"07:20"},{"time":"07:25"},{"time":"07:30"},{"time":"07:35"},{"time":"07:40"},{"time":"07:45"},{"time":"07:50"},{"time":"07:55"},{"time":"08:00"},{"time":"08:05"},{"time":"08:10"},{"time":"08:15"},{"time":"08:20"},{"time":"08:25"},{"time":"08:30"},{"time":"08:35"},{"time":"08:40"},{"time":"08:45"},{"time":"08:50"},{"time":"08:55"},{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"},{"time":"16:05"},{"time":"16:10"},{"time":"16:15"},{"time":"16:20"},{"time":"16:25"},{"time":"16:30"},{"time":"16:35"},{"time":"16:40"},{"time":"16:45"},{"time":"16:50"},{"time":"16:55"},{"time":"17:00"},{"time":"17:05"},{"time":"17:10"},{"time":"17:15"},{"time":"17:20"},{"time":"17:25"},{"time":"17:30"},{"time":"17:35"},{"time":"17:40"},{"time":"17:45"},{"time":"17:50"},{"time":"17:55"},{"time":"18:00"},{"time":"18:05"},{"time":"18:10"},{"time":"18:15"},{"time":"18:20"},{"time":"18:25"},{"time":"18:30"},{"time":"18:35"},{"time":"18:40"},{"time":"18:45"},{"time":"18:50"},{"time":"18:55"},{"time":"19:00"},{"time":"19:05"},{"time":"19:10"},{"time":"19:15"},{"time":"19:20"},{"time":"19:25"},{"time":"19:30"},{"time":"19:35"},{"time":"19:40"},{"time":"19:45"},{"time":"19:50"},{"time":"19:55"},{"time":"20:00"},{"time":"20:05"},{"time":"20:10"},{"time":"20:15"},{"time":"20:20"},{"time":"20:25"},{"time":"20:30"},{"time":"20:35"},{"time":"20:40"},{"time":"20:45"},{"time":"20:50"},{"time":"20:55"},{"time":"21:00"},{"time":"21:05"},{"time":"21:10"},{"time":"21:15"},{"time":"21:20"},{"time":"21:25"},{"time":"21:30"},{"time":"21:35"},{"time":"21:40"},{"time":"21:45"},{"time":"21:50"},{"time":"21:55"},{"time":"22:00"}],"2026-10-25":[],"2026-10-26":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-27":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-28":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-29":[{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-30":[{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"}],"2026-10-31":[{"time":"08:05"},{"time":"08:10"},{"time":"08:15"},{"time":"08:20"},{"time":"08:25"},{"time":"08:30"},{"time":"08:35"},{"time":"08:40"},{"time":"08:45"},{"time":"08:50"},{"time":"08:55"},{"time":"09:00"},{"time":"09:05"},{"time":"09:10"},{"time":"09:15"},{"time":"09:20"},{"time":"09:25"},{"time":"09:30"},{"time":"09:35"},{"time":"09:40"},{"time":"09:45"},{"time":"09:50"},{"time":"09:55"},{"time":"10:00"},{"time":"10:05"},{"time":"10:10"},{"time":"10:15"},{"time":"10:20"},{"time":"10:25"},{"time":"10:30"},{"time":"10:35"},{"time":"10:40"},{"time":"10:45"},{"time":"10:50"},{"time":"10:55"},{"time":"11:00"},{"time":"11:05"},{"time":"11:10"},{"time":"11:15"},{"time":"11:20"},{"time":"11:25"},{"time":"11:30"},{"time":"11:35"},{"time":"11:40"},{"time":"11:45"},{"time":"11:50"},{"time":"11:55"},{"time":"12:00"},{"time":"12:05"},{"time":"12:10"},{"time":"12:15"},{"time":"12:20"},{"time":"12:25"},{"time":"12:30"},{"time":"12:35"},{"time":"12:40"},{"time":"12:45"},{"time":"12:50"},{"time":"12:55"},{"time":"13:00"},{"time":"13:05"},{"time":"13:10"},{"time":"13:15"},{"time":"13:20"},{"time":"13:25"},{"time":"13:30"},{"time":"13:35"},{"time":"13:40"},{"time":"13:45"},{"time":"13:50"},{"time":"13:55"},{"time":"14:00"},{"time":"14:05"},{"time":"14:10"},{"time":"14:15"},{"time":"14:20"},{"time":"14:25"},{"time":"14:30"},{"time":"14:35"},{"time":"14:40"},{"time":"14:45"},{"time":"14:50"},{"time":"14:55"},{"time":"15:00"},{"time":"15:05"},{"time":"15:10"},{"time":"15:15"},{"time":"15:20"},{"time":"15:25"},{"time":"15:30"},{"time":"15:35"},{"time":"15:40"},{"time":"15:45"},{"time":"15:50"},{"time":"15:55"},{"time":"16:00"},{"time":"16:05"},{"time":"16:10"},{"time":"16:15"},{"time":"16:20"},{"time":"16:25"},{"time":"16:30"},{"time":"16:35"},{"time":"16:40"},{"time":"16:45"},{"time":"16:50"},{"time":"16:55"},{"time":"17:00"},{"time":"17:05"},{"time":"17:10"},{"time":"17:15"},{"time":"17:20"},{"time":"17:25"},{"time":"17:30"},{"time":"17:35"},{"time":"17:40"},{"time":"17:45"},{"time":"17:50"},{"time":"17:55"},{"time":"18:00"},{"time":"18:05"},{"time":"18:10"},{"time":"18:15"},{"time":"18:20"},{"time":"18:25"},{"time":"18:30"},{"time":"18:35"},{"time":"18:40"},{"time":"18:45"},{"time":"18:50"},{"time":"18:55"},{"time":"19:00"},{"time":"19:05"},{"time":"19:10"},{"time":"19:15"},{"time":"19:20"},{"time":"19:25"},{"time":"19:30"},{"time":"19:35"},{"time":"19:40"},{"time":"19:45"},{"time":"19:50"},{"time":"19:55"},{"time":"20:00"},{"time":"20:05"},{"time":"20:10"},{"time":"20:15"},{"time":"20:20"},{"time":"20:25"},{"time":"20:30"},{"time":"20:35"},{"time":"20:40"},{"time":"20:45"},{"time":"20:50"},{"time":"20:55"},{"time":"21:00"},{"time":"21:05"},{"time":"21:10"},{"time":"21:15"},{"time":"21:20"},{"time":"21:25"},{"time":"21:30"},{"time":"21:35"},{"time":"21:40"},{"time":"21:45"},{"time":"21:50"},{"time":"21:55"},{"time":"22:00"}]},"pagination":{"month":"2026-10","previous_month":"2026-09","next_month":"2026-11"}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/public/schedule
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      username:
+        custom: []
+        name: username
+        description: 'Must match an existing stored value.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      date:
+        custom: []
+        name: date
+        description: 'Must be a valid date in the format <code>Y-m-d</code>.'
+        required: true
+        example: '2026-10-02'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      starts_at:
+        custom: []
+        name: starts_at
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ends_at:
+        custom: []
+        name: ends_at
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      event_id:
+        custom: []
+        name: event_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      guests:
+        custom: []
+        name: guests
+        description: ''
+        required: true
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'guests[].name':
+        custom: []
+        name: 'guests[].name'
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'guests[].email':
+        custom: []
+        name: 'guests[].email'
+        description: 'Must be a valid email address.'
+        required: true
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'guests[].attendance_status':
+        custom: []
+        name: 'guests[].attendance_status'
+        description: ''
+        required: false
+        example: cancelled
+        type: string
+        enumValues:
+          - pending
+          - confirmed
+          - cancelled
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      username: architecto
+      date: '2026-10-02'
+      starts_at: '15:20'
+      ends_at: '15:20'
+      notes: architecto
+      event_id: architecto
+      guests:
+        -
+          name: architecto
+          email: zbailey@example.net
+          attendance_status: cancelled
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/bookings/details/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the detail.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/guest/{email}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      email:
+        custom: []
+        name: email
+        description: ''
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      email: gbailey@example.net
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 404
+        content: '{"message":"Guest not found"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/guests
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"message":"Guests fetched successfully","guests":{"pendingAttributes":[]}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/guests
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      booking_id:
+        custom: []
+        name: booking_id
+        description: 'Must match an existing stored value.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      guests:
+        custom: []
+        name: guests
+        description: ''
+        required: true
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'guests[].name':
+        custom: []
+        name: 'guests[].name'
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      'guests[].email':
+        custom: []
+        name: 'guests[].email'
+        description: 'Must be a valid email address.'
+        required: true
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'guests[].attendance_status':
+        custom: []
+        name: 'guests[].attendance_status'
+        description: ''
+        required: false
+        example: confirmed
+        type: string
+        enumValues:
+          - pending
+          - confirmed
+          - cancelled
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      booking_id: architecto
+      guests:
+        -
+          name: architecto
+          email: zbailey@example.net
+          attendance_status: confirmed
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/guests/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the guest.'
+        required: true
+        example: 6
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 6
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: false
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      attendance_status:
+        custom: []
+        name: attendance_status
+        description: ''
+        required: false
+        example: confirmed
+        type: string
+        enumValues:
+          - pending
+          - confirmed
+          - cancelled
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: architecto
+      email: zbailey@example.net
+      attendance_status: confirmed
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/guests/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the guest.'
+        required: true
+        example: 6
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 6
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/users/me
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/users/check-username
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PATCH
+    uri: api/users/edit-profile
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      avatar_url:
+        custom: []
+        name: avatar_url
+        description: ''
+        required: false
+        example: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      username:
+        custom: []
+        name: username
+        description: 'Must be at least 3 characters.'
+        required: false
+        example: ikhwaykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntltcvipojsau
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: ''
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: architecto
+      avatar_url: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+      username: ikhwaykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntltcvipojsau
+      description: 'Eius et animi quos velit et.'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PATCH
+    uri: api/users/change-password
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      avatar_url:
+        custom: []
+        name: avatar_url
+        description: ''
+        required: false
+        example: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      username:
+        custom: []
+        name: username
+        description: 'Must be at least 3 characters.'
+        required: false
+        example: ikhwaykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntltcvipojsau
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: ''
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      old_password:
+        custom: []
+        name: old_password
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: architecto
+      avatar_url: 'http://www.bailey.biz/quos-velit-et-fugiat-sunt-nihil-accusantium-harum.html'
+      username: ikhwaykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntltcvipojsau
+      description: 'Eius et animi quos velit et.'
+      old_password: architecto
+      password: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PATCH
+    uri: api/users/complete-onboarding
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/availability
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/availability
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      day:
+        custom: []
+        name: day
+        description: ''
+        required: true
+        example: thursday
+        type: string
+        enumValues:
+          - sunday
+          - monday
+          - tuesday
+          - wednesday
+          - thursday
+          - friday
+          - saturday
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      start_time:
+        custom: []
+        name: start_time
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      end_time:
+        custom: []
+        name: end_time
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      day: thursday
+      start_time: '15:20'
+      end_time: '15:20'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/availability/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the availability.'
+        required: true
+        example: 6
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 6
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      day:
+        custom: []
+        name: day
+        description: ''
+        required: false
+        example: thursday
+        type: string
+        enumValues:
+          - sunday
+          - monday
+          - tuesday
+          - wednesday
+          - thursday
+          - friday
+          - saturday
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      start_time:
+        custom: []
+        name: start_time
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      end_time:
+        custom: []
+        name: end_time
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      day: thursday
+      start_time: '15:20'
+      end_time: '15:20'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/availability/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the availability.'
+        required: true
+        example: 6
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 6
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/connections
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/links
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/links/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the link.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/links/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the link.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must be at least 4 characters. Must not be greater than 20 characters.'
+        required: false
+        example: bngzmiyvdljnikhw
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      slug:
+        custom: []
+        name: slug
+        description: 'Must be at least 3 characters.'
+        required: false
+        example: aykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntltcvipojsausgio
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: ''
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      color:
+        custom: []
+        name: color
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: ''
+        required: false
+        example: published
+        type: string
+        enumValues:
+          - published
+          - draft
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      duration_minutes:
+        custom: []
+        name: duration_minutes
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      is_active:
+        custom: []
+        name: is_active
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      visibility:
+        custom: []
+        name: visibility
+        description: ''
+        required: false
+        example: private
+        type: string
+        enumValues:
+          - private
+          - public
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      pre_meeting_minutes:
+        custom: []
+        name: pre_meeting_minutes
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      post_meeting_minutes:
+        custom: []
+        name: post_meeting_minutes
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: bngzmiyvdljnikhw
+      slug: aykcmyuwpwlvqwrsitcpscqldzsnrwtujwvlxjklqppwqbewtnnoqitpxntltcvipojsausgio
+      description: 'Eius et animi quos velit et.'
+      color: architecto
+      status: published
+      duration_minutes: 16
+      is_active: false
+      visibility: private
+      pre_meeting_minutes: 16
+      post_meeting_minutes: 16
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/links/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the link.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/bookings
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/bookings
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      starts_at:
+        custom: []
+        name: starts_at
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ends_at:
+        custom: []
+        name: ends_at
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      event_id:
+        custom: []
+        name: event_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      starts_at: '15:20'
+      ends_at: '15:20'
+      notes: architecto
+      event_id: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/bookings/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the booking.'
+        required: true
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 4
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          vary: Origin
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/bookings/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the booking.'
+        required: true
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 4
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      status:
+        custom: []
+        name: status
+        description: ''
+        required: false
+        example: completed
+        type: string
+        enumValues:
+          - pending
+          - confirmed
+          - completed
+          - cancelled
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      starts_at:
+        custom: []
+        name: starts_at
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ends_at:
+        custom: []
+        name: ends_at
+        description: 'Must be a valid date in the format <code>H:i</code>.'
+        required: false
+        example: '15:20'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      cancellation_reason:
+        custom: []
+        name: cancellation_reason
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      event_id:
+        custom: []
+        name: event_id
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      status: completed
+      starts_at: '15:20'
+      ends_at: '15:20'
+      cancellation_reason: architecto
+      notes: architecto
+      event_id: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/bookings/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the booking.'
+        required: true
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 4
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
