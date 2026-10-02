@@ -6,6 +6,7 @@ use App\GuestStatus;
 use App\Http\Requests\PublicScheduleRequest;
 use App\Http\Resources\UserResource;
 use App\Jobs\ConfirmGuestJob;
+use App\Jobs\CreateGoogleMeetJob;
 use App\Jobs\InviteGuestJob;
 use App\Models\Booking;
 use App\Models\Event;
@@ -73,6 +74,7 @@ class PublicController extends Controller
                 });
 
                 $booking->load('user');
+                CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
                 $this->dispatchGuestEmailBatches($booking, $guests);
                 $booking->unsetRelation('user');
 
