@@ -40,6 +40,8 @@ Route::get('/bookings/details/{id}', [BookingController::class, 'getBookingDetai
 Route::get('/guest/{email}', [GuestController::class, 'guestByEmail']);
 Route::apiResource('guests', GuestController::class)->only(['index', 'update', 'store', 'destroy']);
 
+Route::get('/automations/templates', [AutomationController::class, 'templates']);
+Route::get('/automations/variables', [AutomationController::class, 'variables']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/me', [UserController::class, 'profile']);
     Route::get('/users/check-username', [UserController::class, 'checkUsername']);
@@ -48,8 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/users/complete-onboarding', [UserController::class, 'completeOnboarding']);
 
     Route::apiResource('availability', AvailabilityController::class)->only(['index', 'update', 'store', 'destroy']);
-    Route::get('/automations/templates', [AutomationController::class, 'templates']);
-    Route::get('/automations/variables', [AutomationController::class, 'variables']);
+
     Route::apiResource('automations', AutomationController::class)->whereNumber('automation');
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
