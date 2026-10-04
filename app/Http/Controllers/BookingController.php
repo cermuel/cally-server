@@ -6,9 +6,11 @@ use App\BookingStatus;
 use App\GuestStatus;
 use App\Http\Requests\BookingRequest;
 use App\Http\Resources\BookingDetailsResource;
+use App\Jobs\CompleteMeetingJob;
 use App\Jobs\UpdateGoogleMeetGuestsJob;
 use App\Models\Booking;
 use App\Services\GoogleCalendarService;
+use App\Support\BookingTime;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,6 +31,7 @@ class BookingController extends Controller
     {
         $body = $request->validated();
         $user = $request->user();
+        $body = BookingTime::normalizePayload($body, $user->timezone);
 
         $booking = $user->bookings()->create($body);
 
@@ -74,7 +77,10 @@ class BookingController extends Controller
     {
         $booking = Booking::where('id', $id)->first();
         $user = $request->user();
-        $body = $request->validated();
+        $body = BookingTime::normalizePayload(
+            $request->validated(),
+            $booking?->booking_timezone ?? $user->timezone,
+        );
 
         if (! $booking) {
             return response()->json(['message' => 'Booking not found'], 404);
@@ -84,7 +90,6 @@ class BookingController extends Controller
             $body['cancelled_at'] = now();
         }
 
-
         $oldStatus = $booking->status;
         $booking->update($body);
 
@@ -92,17 +97,18 @@ class BookingController extends Controller
             $status = $body['status'];
 
             if ($status == BookingStatus::Cancelled->value && $oldStatus != GuestStatus::Cancelled) {
-                retry(3, function () use ($booking, $body) {
+                retry(3, function () use ($booking) {
                     app(GoogleCalendarService::class)->cancelBookingEvent($booking);
                 }, 500);
             }
             if ($status == BookingStatus::Confirmed->value && $oldStatus != GuestStatus::Confirmed) {
                 UpdateGoogleMeetGuestsJob::dispatch($booking->id, true, $user->email, $user->name)->onQueue('meeting');
+                CompleteMeetingJob::dispatch($booking->id)->onQueue('meeting')->delay($booking->ends_at);
             }
         }
         if ($body['starts_at'] ?? false) {
-            // handle reschedule booking proper 
-            //pending send user invite mail
+            // handle reschedule booking proper
+            // pending send user invite mail
             retry(3, function () use ($booking, $body) {
                 app(GoogleCalendarService::class)->updateBookingEvent($booking, $body);
             }, 300);

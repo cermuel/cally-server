@@ -14,6 +14,7 @@ use App\Models\Event;
 use App\Models\Guest;
 use App\Models\User;
 use App\Services\AutomationService;
+use App\Support\BookingTime;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,36 +29,30 @@ class PublicController extends Controller
     {
         $body = $request->validated();
 
-        $lock = Cache::lock('booking-event-' . $body['event_id'] . 'starts-' . $body['date'] . '-' . $body['starts_at'], 10);
+        $startsAt = BookingTime::toUtc($body['starts_at'], $body['timezone']);
+        $endsAt = BookingTime::toUtc($body['ends_at'], $body['timezone']);
+        $lock = Cache::lock('booking-event-'.$body['event_id'].'-starts-'.$startsAt->getTimestamp(), 10);
 
-
-        if (!$lock->get()) {
+        if (! $lock->get()) {
             return response()->json([
                 'message' => 'This slot is currently reserved. Please try again.',
             ], 423);
         }
 
         try {
-            [$booking, $guests] = DB::transaction(function () use ($body): array {
+            [$booking, $guests] = DB::transaction(function () use ($body, $startsAt, $endsAt): array {
                 $user = User::where('username', $body['username'])->firstOrFail();
 
-                $startsAt = isset($body['starts_at'])
-                    ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'] . ' ' . $body['starts_at'], $user->timezone)->utc()
-                    : null;
-                $endsAt = isset($body['ends_at'])
-                    ? CarbonImmutable::createFromFormat('!Y-m-d H:i', $body['date'] . ' ' . $body['ends_at'], $user->timezone)->utc()
-                    : null;
+                $bookingExists = Booking::where('user_id', $user->id)
+                    ->where('status', '!=', 'cancelled')
+                    ->whereNotNull('starts_at')
+                    ->whereNotNull('ends_at')
+                    ->where('starts_at', '<', $endsAt)
+                    ->where('ends_at', '>', $startsAt)
+                    ->exists();
 
-                if ($startsAt && $endsAt) {
-                    $bookingExists = Booking::where('user_id', $user->id)
-                        ->where('status', '!=', 'cancelled')
-                        ->whereNotNull('starts_at')
-                        ->whereNotNull('ends_at')
-                        ->where('starts_at', '<', $endsAt)
-                        ->where('ends_at', '>', $startsAt)
-                        ->exists();
-
-                    if ($bookingExists) abort(409, 'This time is already reserved for another meeting.');;
+                if ($bookingExists) {
+                    abort(409, 'This time is already reserved for another meeting.');
                 }
 
                 $booking = Booking::create([
@@ -65,6 +60,7 @@ class PublicController extends Controller
                     'event_id' => $body['event_id'],
                     'starts_at' => $startsAt,
                     'ends_at' => $endsAt,
+                    'booking_timezone' => $body['timezone'],
                     'notes' => $body['notes'] ?? null,
                 ]);
 
@@ -125,13 +121,14 @@ class PublicController extends Controller
     {
         $user = Cache::remember("public-profile-username-{$username}", 60 * 60, function () use ($username) {
             $user = User::where('username', $username)->first();
-            if (!$user) {
+            if (! $user) {
                 return null;
             }
+
             return $user;
         });
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -156,6 +153,7 @@ class PublicController extends Controller
     {
         $body = $request->validate([
             'month' => ['required', 'date_format:Y-m'],
+            'timezone' => ['required', 'timezone:all'],
         ]);
 
         if (! $event->is_active || $event->status !== 'published') {
@@ -164,41 +162,70 @@ class PublicController extends Controller
 
         $event->load(['user.availabilities']);
 
-        $timezone = $event->user->timezone;
-        $month = CarbonImmutable::createFromFormat('!Y-m', $body['month'], $timezone);
+        $hostTimezone = $event->user->timezone;
+        $viewerTimezone = $body['timezone'];
+        $month = CarbonImmutable::createFromFormat('!Y-m', $body['month'], $viewerTimezone);
         $monthStart = $month->startOfMonth();
         $monthEnd = $month->endOfMonth();
+        $hostRangeStart = $monthStart->utc()->timezone($hostTimezone)->startOfDay()->subDay();
+        $hostRangeEnd = $monthEnd->utc()->timezone($hostTimezone)->endOfDay()->addDay();
         $durationMinutes = (int) $event->duration_minutes;
-        $now = CarbonImmutable::now($timezone);
+        $now = CarbonImmutable::now($hostTimezone);
 
         $bookings = Booking::with('event')
             ->whereBelongsTo($event->user)
             ->where('status', '!=', 'cancelled')
             ->whereNotNull('starts_at')
             ->whereNotNull('ends_at')
-            ->where('starts_at', '<=', $monthEnd->addDay()->utc())
-            ->where('ends_at', '>=', $monthStart->subDay()->utc())
+            ->where('starts_at', '<=', $hostRangeEnd->utc())
+            ->where('ends_at', '>=', $hostRangeStart->utc())
             ->get();
 
         $schedules = [];
 
         for ($date = $monthStart; $date->lte($monthEnd); $date = $date->addDay()) {
-            $dailyBookings = $bookings->filter(function (Booking $booking) use ($date, $timezone): bool {
-                return $this->bookingOverlapsDate($booking, $date, $timezone);
+            $schedules[$date->toDateString()] = [];
+        }
+
+        for ($date = $hostRangeStart; $date->lte($hostRangeEnd); $date = $date->addDay()) {
+            $dailyBookings = $bookings->filter(function (Booking $booking) use ($date, $hostTimezone): bool {
+                return $this->bookingOverlapsDate($booking, $date, $hostTimezone);
             });
 
-            $schedules[$date->toDateString()] = $this->availableTimesForDate(
+            $availableSlots = $this->availableSlotsForDate(
                 date: $date,
                 event: $event,
                 durationMinutes: $durationMinutes,
                 dailyBookings: $dailyBookings,
                 now: $now,
             );
+
+            foreach ($availableSlots as $slot) {
+                $viewerStart = $slot['starts_at']->timezone($viewerTimezone);
+
+                if ($viewerStart->lt($monthStart) || $viewerStart->gt($monthEnd)) {
+                    continue;
+                }
+
+                $dateKey = $viewerStart->toDateString();
+                $schedules[$dateKey][] = [
+                    'time' => $viewerStart->format('H:i'),
+                    'starts_at' => $slot['starts_at']->utc()->toISOString(),
+                    'ends_at' => $slot['ends_at']->utc()->toISOString(),
+                ];
+            }
         }
+
+        foreach ($schedules as &$slots) {
+            usort($slots, fn (array $first, array $second): int => $first['starts_at'] <=> $second['starts_at']);
+        }
+        unset($slots);
 
         return response()->json([
             'message' => 'Schedule fetched successfully',
             'schedules' => $schedules,
+            'timezone' => $viewerTimezone,
+            'host_timezone' => $hostTimezone,
             'pagination' => [
                 'month' => $month->format('Y-m'),
                 'previous_month' => $month->subMonth()->format('Y-m'),
@@ -207,7 +234,10 @@ class PublicController extends Controller
         ]);
     }
 
-    private function availableTimesForDate(CarbonImmutable $date, Event $event, int $durationMinutes, $dailyBookings, CarbonImmutable $now): array
+    /**
+     * @return array<int, array{starts_at: CarbonImmutable, ends_at: CarbonImmutable}>
+     */
+    private function availableSlotsForDate(CarbonImmutable $date, Event $event, int $durationMinutes, $dailyBookings, CarbonImmutable $now): array
     {
         if ($date->endOfDay()->lte($now)) {
             return [];
@@ -219,7 +249,7 @@ class PublicController extends Controller
 
         $weekday = strtolower($date->format('l'));
         $availabilities = $event->user->availabilities->where('day', $weekday);
-        $times = [];
+        $slots = [];
 
         foreach ($availabilities as $availability) {
             if (! $availability->start_time || ! $availability->end_time) {
@@ -240,11 +270,14 @@ class PublicController extends Controller
                     continue;
                 }
 
-                $times[] = ['time' => $slotStart->format('H:i')];
+                $slots[$slotStart->utc()->toISOString()] = [
+                    'starts_at' => $slotStart,
+                    'ends_at' => $slotEnd,
+                ];
             }
         }
 
-        return array_values(array_unique($times, SORT_REGULAR));
+        return array_values($slots);
     }
 
     private function dailyLimitReached(CarbonImmutable $date, Event $event, $dailyBookings): bool
@@ -291,17 +324,17 @@ class PublicController extends Controller
     {
         $frontendUrl = config('services.frontend_url');
         $hostName = $booking->user->name ?? 'Host';
-        $meetingTime = $booking->starts_at?->format('H:i') ?? '';
-        $invitationPath = $frontendUrl . '/public/' . $booking->id . '/request';
-        $confirmationPath = $frontendUrl . '/public/' . $booking->id;
+        $meetingTime = BookingTime::formatForGuest($booking, $booking->starts_at);
+        $invitationPath = $frontendUrl.'/public/'.$booking->id.'/request';
+        $confirmationPath = $frontendUrl.'/public/'.$booking->id;
 
         $invitationJobs = $guests
             ->where('attendance_status', GuestStatus::Pending)
-            ->map(fn(Guest $guest): InviteGuestJob => new InviteGuestJob(
+            ->map(fn (Guest $guest): InviteGuestJob => new InviteGuestJob(
                 $hostName,
                 $guest->email,
                 $meetingTime,
-                $invitationPath . '?email=' . urlencode($guest->email),
+                $invitationPath.'?email='.urlencode($guest->email),
                 $guest->name ?? 'there',
             ));
 
@@ -314,11 +347,11 @@ class PublicController extends Controller
 
         $confirmationJobs = $guests
             ->where('attendance_status', GuestStatus::Confirmed)
-            ->map(fn(Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
+            ->map(fn (Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
                 $hostName,
                 $guest->email,
                 $meetingTime,
-                $confirmationPath . '?email=' . urlencode($guest->email),
+                $confirmationPath.'?email='.urlencode($guest->email),
                 $guest->name ?? 'there',
             ));
 

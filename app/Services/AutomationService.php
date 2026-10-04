@@ -5,12 +5,14 @@ namespace App\Services;
 use App\AutomationAction;
 use App\AutomationTrigger;
 use App\BookingStatus;
+use App\Jobs\CompleteMeetingJob;
 use App\Jobs\SendAutomationEmailJob;
 use App\Jobs\UpdateGoogleMeetGuestsJob;
 use App\Models\Automation;
 use App\Models\Booking;
 use App\Models\Event;
 use App\Models\User;
+use App\Support\BookingTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Bus;
 
@@ -72,6 +74,7 @@ class AutomationService
             $user->email,
             $user->name
         )->onQueue('meeting');
+        CompleteMeetingJob::dispatch($booking->id)->onQueue('meeting')->delay($booking->ends_at);
     }
 
     protected function sendEmail(Booking $booking, Automation $automation): void
@@ -113,8 +116,8 @@ class AutomationService
             '{{guest_name}}' => $guest?->name ?? 'there',
             '{{guest_email}}' => $guest?->email,
 
-            '{{starts_at}}' => optional($booking->starts_at)->format('M j, Y g:i A'),
-            '{{ends_at}}' => optional($booking->ends_at)->format('M j, Y g:i A'),
+            '{{starts_at}}' => BookingTime::formatForGuest($booking, $booking->starts_at),
+            '{{ends_at}}' => BookingTime::formatForGuest($booking, $booking->ends_at),
 
             '{{booking_status}}' => $booking->status?->value ?? $booking->status,
         ];

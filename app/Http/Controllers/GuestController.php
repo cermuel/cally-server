@@ -10,6 +10,7 @@ use App\Jobs\InviteGuestJob;
 use App\Jobs\UpdateGoogleMeetGuestsJob;
 use App\Models\Booking;
 use App\Models\Guest;
+use App\Support\BookingTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
@@ -43,9 +44,9 @@ class GuestController extends Controller
                 return $booking->guests()->create($guest);
             });
             $frontendUrl = config('services.frontend_url');
-            $url = $frontendUrl . '/public/' . $booking->id . '/request';
-            $confirmationUrl = $frontendUrl . '/public/' . $booking->id;
-            $meetingTime = $booking->starts_at?->format('H:i') ?? '';
+            $url = $frontendUrl.'/public/'.$booking->id.'/request';
+            $confirmationUrl = $frontendUrl.'/public/'.$booking->id;
+            $meetingTime = BookingTime::formatForGuest($booking, $booking->starts_at);
 
             CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
 
@@ -56,7 +57,7 @@ class GuestController extends Controller
                     $booking->user->name,
                     $guest->email,
                     $meetingTime,
-                    $url . '?email=' . urlencode($guest->email),
+                    $url.'?email='.urlencode($guest->email),
                     $guest->name
                 );
             })->toArray();
@@ -68,7 +69,7 @@ class GuestController extends Controller
                     $booking->user->name,
                     $guest->email,
                     $meetingTime,
-                    $confirmationUrl . '?email=' . urlencode($guest->email),
+                    $confirmationUrl.'?email='.urlencode($guest->email),
                     $guest->name ?? 'there'
                 );
             })->toArray();
@@ -132,12 +133,12 @@ class GuestController extends Controller
             if ($status == GuestStatus::Confirmed->value && $oldstatus != GuestStatus::Confirmed) {
                 UpdateGoogleMeetGuestsJob::dispatch($booking->id, true, $guest->email, $guest->name)->onQueue('meeting');
                 $frontendUrl = config('services.frontend_url');
-                $confirmationUrl = $frontendUrl . '/public/' . $booking->id;
+                $confirmationUrl = $frontendUrl.'/public/'.$booking->id;
                 ConfirmGuestJob::dispatch(
                     $booking->user->name,
                     $guest->email,
-                    $booking->starts_at?->format('H:i') ?? '',
-                    $confirmationUrl . '?email=' . urlencode($guest->email),
+                    BookingTime::formatForGuest($booking, $booking->starts_at),
+                    $confirmationUrl.'?email='.urlencode($guest->email),
                     $guest->name ?? 'there'
                 )->onQueue('meeting-confirm');
             }

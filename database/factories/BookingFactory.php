@@ -24,6 +24,7 @@ class BookingFactory extends Factory
             'event_id' => Event::factory(),
             'starts_at' => now()->addDay()->setTime(9, 0),
             'ends_at' => now()->addDay()->setTime(9, 30),
+            'booking_timezone' => 'UTC',
             'status' => 'confirmed',
         ];
     }

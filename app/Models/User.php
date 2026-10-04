@@ -11,7 +11,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory;
 
-    protected $fillable = ['email', 'name', 'username', 'avatar_url', 'password', 'reset_password_token', 'reset_password_token_expires_at', 'onboarding_completed_at', 'email_verified_at', 'email_token', 'email_token_expires_at', 'description'];
+    protected $fillable = ['email', 'name', 'username', 'avatar_url', 'password', 'reset_password_token', 'reset_password_token_expires_at', 'onboarding_completed_at', 'email_verified_at', 'email_token', 'email_token_expires_at', 'description', 'timezone'];
 
     public function events()
     {

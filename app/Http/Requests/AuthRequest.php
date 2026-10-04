@@ -30,6 +30,7 @@ class AuthRequest extends FormRequest
             return [
                 'email' => ['required', 'email', 'unique:users,email'],
                 'password' => ['required', 'min:4', 'confirmed'],
+                'timezone' => ['required', 'timezone:all'],
             ];
         }
 

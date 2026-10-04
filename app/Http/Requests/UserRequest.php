@@ -27,11 +27,13 @@ class UserRequest extends FormRequest
                 'email' => strtolower(trim($this->input('email'))),
             ]);
         }
+
         return [
             'name' => ['string', 'nullable'],
             'avatar_url' => ['string', 'nullable'],
             'username' => ['string', 'unique:users,username', 'min:3', 'nullable'],
-            'description' => ['string', 'nullable']
+            'description' => ['string', 'nullable'],
+            'timezone' => ['string', 'timezone:all', 'nullable'],
         ];
     }
 }

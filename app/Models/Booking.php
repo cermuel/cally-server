@@ -14,7 +14,7 @@ class Booking extends Model
     /** @use HasFactory<BookingFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'event_id', 'starts_at', 'ends_at', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
+    protected $fillable = ['user_id', 'event_id', 'starts_at', 'ends_at', 'booking_timezone', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
 
     public function scopeFilter(Builder $query, array $filters): Builder
     {

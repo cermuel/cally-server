@@ -18,8 +18,9 @@ class BookingRequest extends FormRequest
         // 'event_id', 'starts_at', 'ends_at', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'
         if ($this->isMethod('post')) {
             return [
-                'starts_at' => ['nullable', 'date_format:H:i'],
-                'ends_at' => ['nullable', 'date_format:H:i'],
+                'starts_at' => ['nullable', 'date', 'before:ends_at'],
+                'ends_at' => ['nullable', 'date', 'after:starts_at'],
+                'timezone' => ['nullable', 'timezone:all'],
                 'notes' => ['string', 'nullable'],
                 'event_id' => ['string', 'required'],
             ];
@@ -27,8 +28,9 @@ class BookingRequest extends FormRequest
 
         return [
             'status' => ['nullable', Rule::enum(BookingStatus::class)],
-            'starts_at' => ['nullable', 'date_format:H:i'],
-            'ends_at' => ['nullable', 'date_format:H:i'],
+            'starts_at' => ['nullable', 'date', 'before:ends_at'],
+            'ends_at' => ['nullable', 'date', 'after:starts_at'],
+            'timezone' => ['nullable', 'timezone:all'],
             'cancellation_reason' => ['string', 'nullable'],
             'notes' => ['string', 'nullable'],
             'event_id' => ['string', 'nullable'],

@@ -33,9 +33,10 @@ class PublicScheduleRequest extends FormRequest
     {
         return [
             'username' => ['required', 'string', 'exists:users,username'],
-            'date' => ['required', 'date_format:Y-m-d'],
-            'starts_at' => ['nullable', 'date_format:H:i'],
-            'ends_at' => ['nullable', 'date_format:H:i'],
+            'date' => ['nullable', 'date_format:Y-m-d'],
+            'starts_at' => ['required', 'date', 'before:ends_at'],
+            'ends_at' => ['required', 'date', 'after:starts_at'],
+            'timezone' => ['required', 'timezone:all'],
             'notes' => ['nullable', 'string'],
             'event_id' => [
                 'required',
