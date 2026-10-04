@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AutomationTrigger;
 use App\GuestStatus;
 use App\Http\Requests\PublicScheduleRequest;
 use App\Http\Resources\UserResource;
@@ -12,6 +13,7 @@ use App\Models\Booking;
 use App\Models\Event;
 use App\Models\Guest;
 use App\Models\User;
+use App\Services\AutomationService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -74,6 +76,7 @@ class PublicController extends Controller
                 });
 
                 $booking->load('user');
+                app(AutomationService::class)->run(AutomationTrigger::BookingCreated, $booking, null);
                 CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
                 $this->dispatchGuestEmailBatches($booking, $guests);
                 $booking->unsetRelation('user');

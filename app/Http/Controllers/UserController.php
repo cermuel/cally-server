@@ -107,9 +107,9 @@ class UserController extends Controller
         }
 
         DB::transaction(function () use ($user) {
-            // foreach ($this->meetings as $key => $meeting) {
-            //     $user->events()->create($meeting);
-            // }
+            foreach ($this->meetings as $key => $meeting) {
+                $user->events()->create($meeting);
+            }
             $user->update([
                 'onboarding_completed_at' => now(),
             ]);

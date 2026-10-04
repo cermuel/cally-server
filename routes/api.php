@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ConnectionController;
@@ -47,6 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/users/complete-onboarding', [UserController::class, 'completeOnboarding']);
 
     Route::apiResource('availability', AvailabilityController::class)->only(['index', 'update', 'store', 'destroy']);
+    Route::get('/automations/templates', [AutomationController::class, 'templates']);
+    Route::get('/automations/variables', [AutomationController::class, 'variables']);
+    Route::apiResource('automations', AutomationController::class)->whereNumber('automation');
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
     Route::apiResource('bookings', BookingController::class);

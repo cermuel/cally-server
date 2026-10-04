@@ -33,6 +33,11 @@ class User extends Authenticatable
         return $this->hasMany(Connection::class);
     }
 
+    public function automations()
+    {
+        return $this->hasMany(Automation::class);
+    }
+
     protected function casts(): array
     {
         return [
