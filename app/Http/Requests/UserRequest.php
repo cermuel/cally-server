@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -29,11 +28,11 @@ class UserRequest extends FormRequest
         }
 
         return [
-            'name' => ['string', 'nullable'],
-            'avatar_url' => ['string', 'nullable'],
-            'username' => ['string', 'unique:users,username', 'min:3', 'nullable'],
-            'description' => ['string', 'nullable'],
-            'timezone' => ['string', 'timezone:all', 'nullable'],
+            'name' => ['string', 'nullable', 'sometimes'],
+            'avatar_url' => ['string', 'nullable', 'sometimes'],
+            'username' => ['string', 'unique:users,username', 'min:3', 'nullable', 'sometimes'],
+            'description' => ['string', 'nullable', 'sometimes'],
+            'timezone' => ['string', 'timezone:all', 'nullable', 'sometimes'],
         ];
     }
 }

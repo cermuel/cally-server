@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\BookingFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +13,7 @@ class Booking extends Model
     /** @use HasFactory<BookingFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'event_id', 'starts_at', 'ends_at', 'booking_timezone', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
+    protected $fillable = ['user_id', 'contact_id', 'event_id', 'starts_at', 'ends_at', 'booking_timezone', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
 
     public function scopeFilter(Builder $query, array $filters): Builder
     {
@@ -43,6 +42,11 @@ class Booking extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function contact(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class);
     }
 
     public function event(): BelongsTo

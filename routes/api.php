@@ -5,6 +5,7 @@ use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
@@ -42,17 +43,18 @@ Route::apiResource('guests', GuestController::class)->only(['index', 'update', '
 
 Route::get('/automations/templates', [AutomationController::class, 'templates']);
 Route::get('/automations/variables', [AutomationController::class, 'variables']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/me', [UserController::class, 'profile']);
     Route::get('/users/check-username', [UserController::class, 'checkUsername']);
     Route::patch('/users/edit-profile', [UserController::class, 'update']);
     Route::patch('/users/change-password', [UserController::class, 'changePassword']);
     Route::patch('/users/complete-onboarding', [UserController::class, 'completeOnboarding']);
-
     Route::apiResource('availability', AvailabilityController::class)->only(['index', 'update', 'store', 'destroy']);
-
     Route::apiResource('automations', AutomationController::class)->whereNumber('automation');
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
+    Route::delete('contacts', [ContactController::class, 'massDelete'])->name('contacts.mass-delete');
+    Route::apiResource('contacts', ContactController::class);
     Route::apiResource('bookings', BookingController::class);
 });

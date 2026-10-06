@@ -38,6 +38,11 @@ class User extends Authenticatable
         return $this->hasMany(Automation::class);
     }
 
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
     protected function casts(): array
     {
         return [
