@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\BookingStatus;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -22,7 +23,13 @@ class BookingRequest extends FormRequest
                 'ends_at' => ['nullable', 'date', 'after:starts_at'],
                 'timezone' => ['nullable', 'timezone:all'],
                 'notes' => ['string', 'nullable'],
-                'event_id' => ['string', 'required'],
+                'event_id' => [
+                    'string',
+                    'required',
+                    Rule::exists('events', 'id')->where(
+                        fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                    ),
+                ],
             ];
         }
 
@@ -33,7 +40,20 @@ class BookingRequest extends FormRequest
             'timezone' => ['nullable', 'timezone:all'],
             'cancellation_reason' => ['string', 'nullable'],
             'notes' => ['string', 'nullable'],
-            'event_id' => ['string', 'nullable'],
+            'event_id' => [
+                'string',
+                'nullable',
+                Rule::exists('events', 'id')->where(
+                    fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                ),
+            ],
+            'contact_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('contacts', 'id')->where(
+                    fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                ),
+            ],
         ];
     }
 }

@@ -22,7 +22,7 @@ class BookingController extends Controller
         $filters = $request->only(['status', 'provider_id', 'date', 'event_id']);
         $user = $request->user();
 
-        $bookings = Booking::with('guests')->where('user_id', $user->id)->filter($filters)->latest()->paginate();
+        $bookings = Booking::with(['contact', 'guests'])->where('user_id', $user->id)->filter($filters)->latest()->paginate();
 
         return response()->json(['message' => 'Bookings fetched successfully', 'bookings' => $bookings]);
     }
@@ -34,19 +34,19 @@ class BookingController extends Controller
         $body = BookingTime::normalizePayload($body, $user->timezone);
 
         $booking = $user->bookings()->create($body);
+        $booking->load('contact');
 
         return response()->json(['message' => 'Bookings created successfully', 'booking' => $booking]);
     }
 
-    public function show(string $id)
+    public function show(Request $request, string $id): JsonResponse
     {
-        $booking = Booking::with('guests')->where('id', $id)->where('is_profile', true)->first();
+        $booking = $request->user()
+            ->bookings()
+            ->with(['contact', 'guests'])
+            ->findOrFail($id);
 
-        if (! $booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
-        }
-
-        return response()->json(['link' => $booking, 'message' => 'Booking fetched successfully']);
+        return response()->json(['booking' => $booking, 'message' => 'Booking fetched successfully']);
     }
 
     public function getBookingDetails(string $id): JsonResponse
@@ -75,18 +75,14 @@ class BookingController extends Controller
 
     public function update(BookingRequest $request, string $id)
     {
-        $booking = Booking::where('id', $id)->first();
         $user = $request->user();
+        $booking = $user->bookings()->findOrFail($id);
         $body = BookingTime::normalizePayload(
             $request->validated(),
-            $booking?->booking_timezone ?? $user->timezone,
+            $booking->booking_timezone ?? $user->timezone,
         );
 
-        if (! $booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
-        }
-
-        if ($body['status'] == 'cancelled') {
+        if (($body['status'] ?? null) === BookingStatus::Cancelled->value) {
             $body['cancelled_at'] = now();
         }
 
@@ -96,12 +92,12 @@ class BookingController extends Controller
         if ($body['status'] ?? false) {
             $status = $body['status'];
 
-            if ($status == BookingStatus::Cancelled->value && $oldStatus != GuestStatus::Cancelled) {
+            if ($status == BookingStatus::Cancelled->value && $oldStatus != BookingStatus::Cancelled->value) {
                 retry(3, function () use ($booking) {
                     app(GoogleCalendarService::class)->cancelBookingEvent($booking);
                 }, 500);
             }
-            if ($status == BookingStatus::Confirmed->value && $oldStatus != GuestStatus::Confirmed) {
+            if ($status == BookingStatus::Confirmed->value && $oldStatus != BookingStatus::Confirmed->value) {
                 UpdateGoogleMeetGuestsJob::dispatch($booking->id, true, $user->email, $user->name)->onQueue('meeting');
                 CompleteMeetingJob::dispatch($booking->id)->onQueue('meeting')->delay($booking->ends_at);
             }
@@ -114,16 +110,14 @@ class BookingController extends Controller
             }, 300);
         }
 
-        return response()->json(['link' => $booking, 'message' => 'Booking updated successfully']);
+        $booking->load('contact');
+
+        return response()->json(['booking' => $booking, 'message' => 'Booking updated successfully']);
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id): JsonResponse
     {
-        $booking = Booking::where('id', $id)->with('user')->first();
-
-        if (! $booking) {
-            return response()->json(['message' => 'Booking deleted successfully']);
-        }
+        $booking = $request->user()->bookings()->with('user')->findOrFail($id);
         if (now()->lessThan($booking->ends_at) && $booking->status !== BookingStatus::Cancelled) {
             retry(3, function () use ($booking) {
                 app(GoogleCalendarService::class)->cancelBookingEvent($booking);

@@ -20,6 +20,7 @@ class BookingDetailsResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'contact_id' => $this->contact_id,
             'event_id' => $this->event_id,
             'starts_at' => $this->starts_at?->toISOString(),
             'ends_at' => $this->ends_at?->toISOString(),

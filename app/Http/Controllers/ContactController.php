@@ -61,8 +61,10 @@ class ContactController extends Controller
         ], 201);
     }
 
-    public function show(Contact $contact): JsonResponse
+    public function show(Request $request, Contact $contact): JsonResponse
     {
+        abort_unless($contact->user_id === $request->user()->id, 404);
+
         $contact->load(['platformUser', 'owner']);
 
         return response()->json([
@@ -73,6 +75,8 @@ class ContactController extends Controller
 
     public function update(ContactRequest $request, Contact $contact): JsonResponse
     {
+        abort_unless($contact->user_id === $request->user()->id, 404);
+
         $body = $request->validated();
         $contact->load(['platformUser', 'owner']);
 
@@ -97,8 +101,10 @@ class ContactController extends Controller
         ]);
     }
 
-    public function destroy(Contact $contact): JsonResponse
+    public function destroy(Request $request, Contact $contact): JsonResponse
     {
+        abort_unless($contact->user_id === $request->user()->id, 404);
+
         $contact->delete();
 
         return response()->json(['message' => 'Contact deleted successfully']);

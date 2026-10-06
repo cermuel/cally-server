@@ -5,6 +5,7 @@ use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\ContactBookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuestController;
@@ -55,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
     Route::delete('contacts', [ContactController::class, 'massDelete'])->name('contacts.mass-delete');
+    Route::get('contacts/{contact}/bookings', [ContactBookingController::class, 'index'])->name('contacts.bookings.index');
+    Route::post('contacts/{contact}/bookings', [ContactBookingController::class, 'store'])->name('contacts.bookings.store');
     Route::apiResource('contacts', ContactController::class);
     Route::apiResource('bookings', BookingController::class);
 });

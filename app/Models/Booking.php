@@ -15,6 +15,26 @@ class Booking extends Model
 
     protected $fillable = ['user_id', 'contact_id', 'event_id', 'starts_at', 'ends_at', 'booking_timezone', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
 
+    protected static function booted(): void
+    {
+        static::saved(function (Booking $booking): void {
+            $contactIds = collect([
+                $booking->contact_id,
+                $booking->getPrevious()['contact_id'] ?? null,
+            ])->filter()->unique();
+
+            Contact::query()
+                ->whereKey($contactIds)
+                ->each(function (Contact $contact): void {
+                    $contact->refreshBookingStatistics();
+                });
+        });
+
+        static::deleted(function (Booking $booking): void {
+            $booking->contact?->refreshBookingStatistics();
+        });
+    }
+
     public function scopeFilter(Builder $query, array $filters): Builder
     {
 

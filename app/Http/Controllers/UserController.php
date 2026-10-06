@@ -128,15 +128,6 @@ class UserController extends Controller
             'password' => ['required', 'confirmed'],
         ]);
 
-        if ($body['username']) {
-            $request->user()->update(['username', $body['username']]);
-        }
-        if ($body['name']) {
-            $request->user()->update(['name', $body['name']]);
-        }
-        if ($body['avatar_url']) {
-            $request->user()->update(['avatar_url', $body['avatar_url']]);
-        }
 
         $user = $request->user();
 

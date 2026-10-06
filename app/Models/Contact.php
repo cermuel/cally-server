@@ -55,6 +55,14 @@ class Contact extends Model
         return $this->belongsTo(User::class, 'platform_user_id');
     }
 
+    public function refreshBookingStatistics(): void
+    {
+        $this->update([
+            'bookings_count' => $this->bookings()->count(),
+            'last_booked_at' => $this->bookings()->max('starts_at'),
+        ]);
+    }
+
     protected function casts(): array
     {
         return [

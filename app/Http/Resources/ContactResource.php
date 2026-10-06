@@ -31,6 +31,7 @@ class ContactResource extends JsonResource
             'updated_at' => $this->updated_at,
             'platformUser' => new UserResource($this->whenLoaded('platformUser')),
             'owner' => new UserResource($this->whenLoaded('owner')),
+            'bookings' => BookingDetailsResource::collection($this->whenLoaded('bookings')),
         ];
     }
 }
