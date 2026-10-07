@@ -14,6 +14,7 @@ use App\Models\Event;
 use App\Models\Guest;
 use App\Models\User;
 use App\Services\AutomationService;
+use App\Services\NotificationService;
 use App\Support\BookingTime;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
+    public function __construct(private NotificationService $notificationService, private AutomationService $automationService) {}
+
     public function schedule(PublicScheduleRequest $request): JsonResponse
     {
         $body = $request->validated();
@@ -72,7 +75,10 @@ class PublicController extends Controller
                 });
 
                 $booking->load('user');
-                app(AutomationService::class)->run(AutomationTrigger::BookingCreated, $booking, null);
+                $this->automationService->run(AutomationTrigger::BookingCreated, $booking, null);
+                $booking->load('event');
+                $frontendUrl = config('services.frontend_url');
+                $this->notificationService->send($user, 'booking.created', "New booking for {$booking->event->name}", null, "{$frontendUrl}/app/bookings?booking_id={$booking->id}", ['booking_id' => $booking->id]);
                 CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
                 $this->dispatchGuestEmailBatches($booking, $guests);
                 $booking->unsetRelation('user');

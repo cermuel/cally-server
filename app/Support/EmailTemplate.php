@@ -76,4 +76,21 @@ class EmailTemplate
             'bookingUrl' => $bookingUrl,
         ])->render();
     }
+
+    /**
+     * Render an email notification.
+     */
+    public static function notification(
+        string $title,
+        ?string $message = null,
+        ?string $actionUrl = null,
+        ?string $name = null,
+    ): string {
+        return view('emails.notification', [
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'title' => $title,
+            'message' => $message,
+            'actionUrl' => $actionUrl,
+        ])->render();
+    }
 }

@@ -12,7 +12,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory;
 
-    protected $fillable = ['email', 'name', 'username', 'avatar_url', 'password', 'reset_password_token', 'reset_password_token_expires_at', 'onboarding_completed_at', 'email_verified_at', 'email_token', 'email_token_expires_at', 'description', 'timezone'];
+    protected $fillable = ['email', 'notification_preference', 'name', 'username', 'avatar_url', 'password', 'reset_password_token', 'reset_password_token_expires_at', 'onboarding_completed_at', 'email_verified_at', 'email_token', 'email_token_expires_at', 'description', 'timezone'];
 
     public function events()
     {
@@ -54,12 +54,48 @@ class User extends Authenticatable
         return $this->hasMany(Import::class);
     }
 
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function notificationPreferences(): array
+    {
+        $defaults = [
+            'booking_created' => [
+                'in_app' => true,
+                'email' => true,
+            ],
+
+            'booking_cancelled' => [
+                'in_app' => true,
+                'email' => true,
+            ],
+
+            'booking_rescheduled' => [
+                'in_app' => true,
+                'email' => true,
+            ],
+
+            'guest_added' => [
+                'in_app' => true,
+                'email' => false,
+            ],
+        ];
+
+        return array_replace_recursive(
+            $defaults,
+            $this->notification_preference ?? []
+        );
+    }
+
     protected function casts(): array
     {
         return [
             'email_token_expires_at' => 'datetime',
             'reset_password_token_expires_at' => 'datetime',
             'email_verified_at' => 'datetime',
+            'notification_preference' => 'array',
         ];
     }
 }

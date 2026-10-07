@@ -23,7 +23,7 @@ class UserController extends Controller
             'is_profile' => true,
             'pre_meeting_minutes' => 5,
             'post_meeting_minutes' => 5,
-            'color' => '#fff09a'
+            'color' => '#fff09a',
         ],
         [
             'name' => '30 min meeting',
@@ -36,7 +36,7 @@ class UserController extends Controller
             'is_profile' => true,
             'pre_meeting_minutes' => 5,
             'post_meeting_minutes' => 5,
-            'color' => '#c0a8ff'
+            'color' => '#c0a8ff',
         ],
         [
             'name' => 'Private meeting',
@@ -49,7 +49,7 @@ class UserController extends Controller
             'is_profile' => false,
             'pre_meeting_minutes' => 5,
             'post_meeting_minutes' => 5,
-            'color' => '#cdd2dc'
+            'color' => '#cdd2dc',
         ],
     ];
 
@@ -83,8 +83,16 @@ class UserController extends Controller
     public function update(UserRequest $request)
     {
         $user = $request->user();
+        $validated = $request->validated();
 
-        $user->update($request->validated());
+        if (isset($validated['notification_preference'])) {
+            $validated['notification_preference'] = array_replace_recursive(
+                $user->notification_preference ?? [],
+                $validated['notification_preference'],
+            );
+        }
+
+        $user->update($validated);
 
         Cache::forget("public-profile-{$user->username}");
         Cache::forget("public-profile-username-{$user->username}");
@@ -92,7 +100,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Profile updated successfully',
             'user' => new UserResource(($user)),
-            'validated' => $request->validated(),
+            'validated' => $validated,
         ]);
     }
 
@@ -127,7 +135,6 @@ class UserController extends Controller
             'old_password' => ['required'],
             'password' => ['required', 'confirmed'],
         ]);
-
 
         $user = $request->user();
 

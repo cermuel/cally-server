@@ -15,6 +15,7 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
             'email' => $this->email,
@@ -22,7 +23,11 @@ class UserResource extends JsonResource
             'email_verified_at' => $this->email_verified_at,
             'onboarding_completed_at' => $this->onboarding_completed_at,
             'timezone' => $this->timezone,
-            'description' => $this->description
+            'description' => $this->description,
+            'notification_preference' => $this->when(
+                $request->user()?->is($this->resource),
+                fn (): array => $this->notificationPreferences(),
+            ),
         ];
     }
 }

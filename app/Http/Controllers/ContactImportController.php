@@ -7,15 +7,13 @@ use App\Jobs\ImportContactsJob;
 use App\Models\Import;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ContactImportController extends Controller
 {
-
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'file' => ['required', 'file', 'mimes:csv,txt,xlsx,xls', 'max:10240',],
+            'file' => ['required', 'file', 'mimes:csv,txt,xlsx,xls', 'max:10240'],
         ]);
 
         $user = $request->user();
@@ -39,7 +37,6 @@ class ContactImportController extends Controller
             'imports/contacts'
         );
 
-
         $import = $user->imports()->create([
             'type' => 'contacts',
             'status' => ImportStatus::Pending,
@@ -61,7 +58,6 @@ class ContactImportController extends Controller
         ], 202);
     }
 
-
     public function getStatus(Request $request): JsonResponse
     {
         $user = $request->user();
@@ -75,7 +71,7 @@ class ContactImportController extends Controller
             ->latest()
             ->first();
 
-        if (!$import) {
+        if (! $import) {
             $import = $user->imports()
                 ->where('type', 'contacts')
                 ->where('status', ImportStatus::Failed)
@@ -83,7 +79,7 @@ class ContactImportController extends Controller
                 ->first();
         }
 
-        if (!$import) {
+        if (! $import) {
             return response()->json([
                 'import' => null,
                 'progress' => null,
@@ -126,9 +122,9 @@ class ContactImportController extends Controller
         ]);
     }
 
-    public function template(): StreamedResponse
+    public function template()
     {
-        $headers = ['name', 'email', 'phone', 'timezone', 'company', 'tag', 'notes',];
+        $headers = ['name', 'email', 'phone', 'timezone', 'company', 'tag', 'notes'];
 
         $example = [
             'John Doe',

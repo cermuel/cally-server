@@ -9,7 +9,6 @@ use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ContactController extends Controller
 {
@@ -117,7 +116,7 @@ class ContactController extends Controller
             'ids.*' => [
                 'integer',
                 'required',
-                'distinct'
+                'distinct',
             ],
         ]);
 

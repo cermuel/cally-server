@@ -22,9 +22,22 @@ class BookingController extends Controller
         $filters = $request->only(['status', 'provider_id', 'date', 'event_id']);
         $user = $request->user();
 
-        $bookings = Booking::with(['contact', 'guests'])->where('user_id', $user->id)->filter($filters)->latest()->paginate();
+        $bookings = Booking::with(['contact', 'guests', 'event'])->where('user_id', $user->id)->filter($filters)->latest()->paginate();
 
-        return response()->json(['message' => 'Bookings fetched successfully', 'bookings' => $bookings]);
+        return response()->json([
+            'message' => 'Bookings fetched successfully',
+            'bookings' => BookingDetailsResource::collection($bookings),
+            'pagination' => [
+                'current_page' => $bookings->currentPage(),
+                'per_page' => $bookings->perPage(),
+                'total' => $bookings->total(),
+                'last_page' => $bookings->lastPage(),
+                'from' => $bookings->firstItem(),
+                'to' => $bookings->lastItem(),
+                'previous_page_url' => $bookings->previousPageUrl(),
+                'next_page_url' => $bookings->nextPageUrl(),
+            ],
+        ]);
     }
 
     public function store(BookingRequest $request)
