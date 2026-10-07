@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\ContactBookingController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactImportController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
@@ -55,6 +56,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('automations', AutomationController::class)->whereNumber('automation');
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
+    Route::post('/contacts/import', [ContactImportController::class, 'store']);
+    Route::get('/contacts/import/status', [ContactImportController::class, 'getStatus']);
+    Route::get('/contacts/import/template', [ContactImportController::class, 'template']);
+    Route::delete('/contacts/import/{import}', [ContactImportController::class, 'destroy']);
     Route::delete('contacts', [ContactController::class, 'massDelete'])->name('contacts.mass-delete');
     Route::get('contacts/{contact}/bookings', [ContactBookingController::class, 'index'])->name('contacts.bookings.index');
     Route::post('contacts/{contact}/bookings', [ContactBookingController::class, 'store'])->name('contacts.bookings.store');
