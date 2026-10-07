@@ -116,7 +116,8 @@ class ContactController extends Controller
             'ids' => ['required', 'array'],
             'ids.*' => [
                 'integer',
-                Rule::exists('contacts', 'id')->where('user_id', $request->user()->id),
+                'required',
+                'distinct'
             ],
         ]);
 
