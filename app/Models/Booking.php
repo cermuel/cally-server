@@ -13,7 +13,7 @@ class Booking extends Model
     /** @use HasFactory<BookingFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'contact_id', 'event_id', 'starts_at', 'ends_at', 'booking_timezone', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
+    protected $fillable = ['user_id', 'recurrence_id', 'contact_id', 'event_id', 'starts_at', 'ends_at', 'booking_timezone', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'];
 
     protected static function booted(): void
     {
@@ -72,6 +72,11 @@ class Booking extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function recurrence(): BelongsTo
+    {
+        return $this->belongsTo(Recurrence::class, 'recurrence_id');
     }
 
     public function guests(): HasMany

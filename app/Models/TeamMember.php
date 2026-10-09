@@ -2,24 +2,26 @@
 
 namespace App\Models;
 
-use App\GuestStatus;
+use App\TeamRole;
+use Database\Factories\TeamMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Guest extends Model
+class TeamMember extends Model
 {
+    /** @use HasFactory<TeamMemberFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'email', 'attendance_status', 'booking_id', 'user_id'];
+    protected $fillable = ['team_id', 'user_id', 'role'];
 
     protected $casts = [
-        'attendance_status' => GuestStatus::class,
+        'role' => TeamRole::class,
     ];
 
-    public function booking(): BelongsTo
+    public function team(): BelongsTo
     {
-        return $this->belongsTo(Booking::class);
+        return $this->belongsTo(Team::class);
     }
 
     public function user(): BelongsTo

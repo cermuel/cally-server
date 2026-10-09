@@ -7,18 +7,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/health', function () {
+    return response()->json([
+        'message' => 'Cally server running',
+    ]);
+});
+
 if (app()->isLocal()) {
     Route::get('/dev/email/reset-password', function () {
         return EmailTemplate::resetPassword(
             name: 'Shady',
-            resetUrl: rtrim((string) config('services.frontend_url'), '/').'/auth/reset-password?token=preview-token',
+            resetUrl: rtrim((string) config('services.frontend_url'), '/') . '/auth/reset-password?token=preview-token',
             expiresIn: 'one hour',
         );
     });
 
     Route::get('/dev/email/verify-email', function () {
         return EmailTemplate::verifyEmail(
-            verifyUrl: rtrim((string) config('services.frontend_url'), '/').'/auth/verify-email?token=preview-token',
+            verifyUrl: rtrim((string) config('services.frontend_url'), '/') . '/auth/verify-email?token=preview-token',
             expiresIn: 'one hour',
         );
     });
@@ -26,7 +32,7 @@ if (app()->isLocal()) {
     Route::get('/dev/email/welcome', function () {
         return EmailTemplate::welcome(
             name: 'Shady',
-            dashboardUrl: rtrim((string) config('services.frontend_url'), '/').'/dashboard',
+            dashboardUrl: rtrim((string) config('services.frontend_url'), '/') . '/dashboard',
         );
     });
 
@@ -35,7 +41,7 @@ if (app()->isLocal()) {
             name: null,
             hostName: 'Alex Morgan',
             meetingTime: 'Thursday, 8 October at 2:30 PM BST',
-            invitationUrl: rtrim((string) config('services.frontend_url'), '/').'/invitations/preview-invitation',
+            invitationUrl: rtrim((string) config('services.frontend_url'), '/') . '/invitations/preview-invitation',
         );
     });
 
@@ -44,7 +50,7 @@ if (app()->isLocal()) {
             name: 'Shady',
             hostName: 'Alex Morgan',
             meetingTime: 'Thursday, 8 October at 2:30 PM BST',
-            bookingUrl: rtrim((string) config('services.frontend_url'), '/').'/bookings/preview-booking',
+            bookingUrl: rtrim((string) config('services.frontend_url'), '/') . '/bookings/preview-booking',
         );
     });
 }

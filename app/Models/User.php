@@ -59,6 +59,26 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+    public function teams(): HasMany
+    {
+        return $this->hasMany(Team::class, 'owner_id');
+    }
+
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(TeamMember::class);
+    }
+
+    public function guests(): HasMany
+    {
+        return $this->hasMany(Guest::class);
+    }
+
+    public function recurrences(): HasMany
+    {
+        return $this->hasMany(Recurrence::class);
+    }
+
     public function notificationPreferences(): array
     {
         $defaults = [

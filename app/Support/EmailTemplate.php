@@ -4,24 +4,19 @@ namespace App\Support;
 
 class EmailTemplate
 {
-    /**
-     * Render a password reset email.
-     */
+
     public static function resetPassword(
         string $resetUrl,
         string $expiresIn = 'one hour',
         ?string $name = null,
     ): string {
         return view('emails.reset-password', [
-            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'greeting' => filled($name) ? 'Hello ' . trim($name) : 'Hello',
             'resetUrl' => $resetUrl,
             'expiresIn' => $expiresIn,
         ])->render();
     }
 
-    /**
-     * Render an email verification email.
-     */
     public static function verifyEmail(
         string $verifyUrl,
         string $expiresIn = 'one hour',
@@ -32,9 +27,6 @@ class EmailTemplate
         ])->render();
     }
 
-    /**
-     * Render a welcome email.
-     */
     public static function welcome(string $name, string $dashboardUrl): string
     {
         return view('emails.welcome', [
@@ -43,9 +35,6 @@ class EmailTemplate
         ])->render();
     }
 
-    /**
-     * Render a booking invitation email.
-     */
     public static function bookingInvitation(
         string $hostName,
         string $meetingTime,
@@ -53,16 +42,27 @@ class EmailTemplate
         ?string $name = null,
     ): string {
         return view('emails.booking-invitation', [
-            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'greeting' => filled($name) ? 'Hello ' . trim($name) : 'Hello',
             'hostName' => $hostName,
             'meetingTime' => $meetingTime,
             'invitationUrl' => $invitationUrl,
         ])->render();
     }
 
-    /**
-     * Render a booking confirmation email.
-     */
+    public static function teamInvitation(
+        string $inviterName,
+        string $teamName,
+        string $invitationUrl,
+        string $expiresIn = 'seven days',
+    ): string {
+        return view('emails.team-invitation', [
+            'inviterName' => $inviterName,
+            'teamName' => $teamName,
+            'invitationUrl' => $invitationUrl,
+            'expiresIn' => $expiresIn,
+        ])->render();
+    }
+
     public static function bookingConfirmation(
         string $name,
         string $hostName,
@@ -77,9 +77,6 @@ class EmailTemplate
         ])->render();
     }
 
-    /**
-     * Render an email notification.
-     */
     public static function notification(
         string $title,
         ?string $message = null,
@@ -87,7 +84,7 @@ class EmailTemplate
         ?string $name = null,
     ): string {
         return view('emails.notification', [
-            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'greeting' => filled($name) ? 'Hello ' . trim($name) : 'Hello',
             'title' => $title,
             'message' => $message,
             'actionUrl' => $actionUrl,

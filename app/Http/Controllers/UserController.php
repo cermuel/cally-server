@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -137,6 +138,10 @@ class UserController extends Controller
         ]);
 
         $user = $request->user();
+        if (! Hash::check($body['old_password'], $user->password)) {
+            return response()->json(['message' => 'Invalid old password'], 400);
+        }
+        $user->update(['password' => $body['password']]);
 
         Cache::forget("public-profile-{$user->username}");
         Cache::forget("public-profile-username-{$user->username}");

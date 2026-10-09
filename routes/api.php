@@ -13,6 +13,9 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamInviteController;
+use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +50,8 @@ Route::apiResource('guests', GuestController::class)->only(['index', 'update', '
 Route::get('/automations/templates', [AutomationController::class, 'templates']);
 Route::get('/automations/variables', [AutomationController::class, 'variables']);
 
+Route::get('/team/invite', [TeamInviteController::class, 'getInvite']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/me', [UserController::class, 'profile']);
     Route::get('/users/check-username', [UserController::class, 'checkUsername']);
@@ -62,6 +67,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('automations', AutomationController::class)->whereNumber('automation');
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
+    Route::apiResource('teams', TeamController::class);
+    Route::get('/teams/{team}/members', [TeamMemberController::class, 'index'])->whereNumber('team');
+    Route::patch('/teams/{team}/members/{member}', [TeamMemberController::class, 'update'])->whereNumber(['team', 'member'])->scopeBindings();
+    Route::delete('/teams/{team}/members/{member}', [TeamMemberController::class, 'destroy'])->whereNumber(['team', 'member'])->scopeBindings();
+    Route::post('/teams/accept-invite/{id}', [TeamInviteController::class, 'acceptInvite']);
+    Route::apiResource('/teams/{team}/invite', TeamInviteController::class)->only(['index', 'update', 'store', 'destroy'])->whereNumber('team');
+    Route::post('/teams/{team}/leave', [TeamMemberController::class, 'leave'])->whereNumber('team');
     Route::post('/contacts/import', [ContactImportController::class, 'store']);
     Route::get('/contacts/import/status', [ContactImportController::class, 'getStatus']);
     Route::get('/contacts/import/template', [ContactImportController::class, 'template']);
