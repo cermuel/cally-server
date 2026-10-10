@@ -30,7 +30,6 @@ class GoogleAuthController extends Controller
             'profile',
             'https://www.googleapis.com/auth/calendar.events',
         ]);
-
         $client->setAccessType('offline');
         $client->setPrompt('consent');
     }
