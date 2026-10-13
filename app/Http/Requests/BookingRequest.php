@@ -27,7 +27,14 @@ class BookingRequest extends FormRequest
                     'string',
                     'required',
                     Rule::exists('events', 'id')->where(
-                        fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                        fn(Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                    ),
+                ],
+                'contact_id' => [
+                    'nullable',
+                    'integer',
+                    Rule::exists('contacts', 'id')->where(
+                        fn(Builder $query): Builder => $query->where('user_id', $this->user()->id),
                     ),
                 ],
             ];
@@ -44,14 +51,7 @@ class BookingRequest extends FormRequest
                 'string',
                 'nullable',
                 Rule::exists('events', 'id')->where(
-                    fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
-                ),
-            ],
-            'contact_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('contacts', 'id')->where(
-                    fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                    fn(Builder $query): Builder => $query->where('user_id', $this->user()->id),
                 ),
             ],
         ];
