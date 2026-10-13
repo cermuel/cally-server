@@ -35,8 +35,8 @@ class TeamInviteRequest extends FormRequest
                     'required',
                     'email',
                     'distinct:ignore_case',
-                    Rule::unique('team_invites', 'email')
-                        ->where('team_id', $teamId),
+                    // Rule::unique('team_invites', 'email')
+                    //     ->where('team_id', $teamId),
                 ],
                 'users.*.role' => [
                     'required',

@@ -85,11 +85,62 @@ class TeamInviteController extends Controller
         ]);
     }
 
+    public function declineInvite(Request $request, string $id): JsonResponse
+    {
+        $user = $request->user();
+
+        $body = $request->validate([
+            'token' => ['required', 'string'],
+        ]);
+
+        DB::transaction(function () use ($id, $user, $body) {
+            $invite = TeamInvite::whereKey($id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if (
+                $invite->accepted_at ||
+                $invite->declined_at ||
+                ! $invite->expires_at ||
+                $invite->expires_at->isPast() ||
+                ! $invite->token_hash ||
+                ! Hash::check($body['token'], $invite->token_hash)
+            ) {
+                abort(404, 'Invalid or expired invite');
+            }
+
+            if (strcasecmp($invite->email, $user->email) !== 0) {
+                abort(403, 'This invitation does not belong to you');
+            }
+
+            $team = Team::findOrFail($invite->team_id);
+
+            if ($team->members()->where('user_id', $user->id)->exists()) {
+                abort(409, 'User is already a team member');
+            }
+
+            $team->members()->create([
+                'user_id' => $user->id,
+                'role' => $invite->role,
+            ]);
+
+            $invite->update([
+                'declined_at' => now(),
+            ]);
+        }, 3);
+
+        return response()->json([
+            'message' => 'Invite accepted successfully',
+        ]);
+    }
+
     public function index(Request $request, Team $team): JsonResponse
     {
         $this->authorizeInviteManagement($request->user(), $team);
 
-        $invites = $team->invites()->latest()->paginate();
+        $filters = $request->only(['search']);
+
+        $invites = $team->invites()->filter($filters)->latest()->paginate();
 
         return response()->json([
             'message' => 'Team invites fetched successfully',
@@ -135,10 +186,9 @@ class TeamInviteController extends Controller
                 $inviteExists = $team->invites()
                     ->where('email', $email)
                     ->whereNull('accepted_at')
-                    ->where('expires_at', '>', now())
-                    ->exists();
+                    ->where('expires_at', '>', now())->first();
 
-                if ($inviteExists)  abort(409, "An active invitation already exists for {$email}");
+                if ($inviteExists)  $inviteExists->delete();
 
                 $token = Str::random(64);
 
@@ -181,6 +231,7 @@ class TeamInviteController extends Controller
             'batch_id' => $batch->id,
         ], 201);
     }
+
     public function update(TeamInviteRequest $request, Team $team, TeamInvite $invite): JsonResponse
     {
         $this->authorizeInviteManagement($request->user(), $team);

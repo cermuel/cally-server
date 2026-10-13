@@ -16,9 +16,11 @@ class TeamMemberController extends Controller
     public function index(Request $request, Team $team): JsonResponse
     {
         $this->authorizeTeamAccess($request->user(), $team);
+        $filters = $request->only(['search']);
 
         $members = $team->members()
             ->with('user')
+            ->filter($filters)
             ->latest()
             ->paginate();
 
@@ -110,9 +112,9 @@ class TeamMemberController extends Controller
 
         $canManageMembers = $team->owner_id === $user->id
             || $team->members()
-                ->whereBelongsTo($user)
-                ->where('role', TeamRole::Admin->value)
-                ->exists();
+            ->whereBelongsTo($user)
+            ->where('role', TeamRole::Admin->value)
+            ->exists();
 
         abort_unless($canManageMembers, 403, 'You do not have permission to manage team members.');
     }

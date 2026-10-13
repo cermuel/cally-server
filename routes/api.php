@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/teams/{team}/members/{member}', [TeamMemberController::class, 'update'])->whereNumber(['team', 'member'])->scopeBindings();
     Route::delete('/teams/{team}/members/{member}', [TeamMemberController::class, 'destroy'])->whereNumber(['team', 'member'])->scopeBindings();
     Route::post('/teams/accept-invite/{id}', [TeamInviteController::class, 'acceptInvite']);
+    Route::post('/teams/decline-invite/{id}', [TeamInviteController::class, 'declineInvite']);
     Route::apiResource('/teams/{team}/invite', TeamInviteController::class)->only(['index', 'update', 'store', 'destroy'])->whereNumber('team');
     Route::post('/teams/{team}/leave', [TeamMemberController::class, 'leave'])->whereNumber('team');
     Route::post('/contacts/import', [ContactImportController::class, 'store']);

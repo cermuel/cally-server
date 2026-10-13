@@ -141,7 +141,8 @@ class UserController extends Controller
         if (! Hash::check($body['old_password'], $user->password)) {
             return response()->json(['message' => 'Invalid old password'], 400);
         }
-        $user->update(['password' => $body['password']]);
+        $hashedPassword = Hash::make($body['password']);
+        $user->update(['password' => $hashedPassword]);
 
         Cache::forget("public-profile-{$user->username}");
         Cache::forget("public-profile-username-{$user->username}");
