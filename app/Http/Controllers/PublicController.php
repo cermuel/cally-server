@@ -240,6 +240,56 @@ class PublicController extends Controller
         ]);
     }
 
+    public function getAvailableTimes(Request $request, Event $event): JsonResponse
+    {
+        $body = $request->validate([
+            'booking_date' => ['required', 'date_format:Y-m-d'],
+        ]);
+
+        if (! $event->is_active || $event->status !== 'published') {
+            return response()->json(['message' => 'Event not found'], 404);
+        }
+
+        $event->load(['user.availabilities']);
+
+        $hostTimezone = $event->user->timezone;
+        $bookingDate = CarbonImmutable::createFromFormat('!Y-m-d', $body['booking_date'], $hostTimezone);
+        $rangeStart = $bookingDate->startOfDay()->subDay();
+        $rangeEnd = $bookingDate->endOfDay()->addDay();
+
+        $bookings = Booking::with('event')
+            ->whereBelongsTo($event->user)
+            ->where('status', '!=', 'cancelled')
+            ->whereNotNull('starts_at')
+            ->whereNotNull('ends_at')
+            ->where('starts_at', '<=', $rangeEnd->utc())
+            ->where('ends_at', '>=', $rangeStart->utc())
+            ->get();
+
+        $dailyBookings = $bookings->filter(function (Booking $booking) use ($bookingDate, $hostTimezone): bool {
+            return $this->bookingOverlapsDate($booking, $bookingDate, $hostTimezone);
+        });
+
+        $availableTimes = collect($this->availableSlotsForDate(
+            date: $bookingDate,
+            event: $event,
+            durationMinutes: (int) $event->duration_minutes,
+            dailyBookings: $dailyBookings,
+            now: CarbonImmutable::now($hostTimezone),
+        ))->map(fn (array $slot): array => [
+            'time' => $slot['starts_at']->format('H:i'),
+            'starts_at' => $slot['starts_at']->utc()->toISOString(),
+            'ends_at' => $slot['ends_at']->utc()->toISOString(),
+        ])->values();
+
+        return response()->json([
+            'message' => 'Available times fetched successfully',
+            'booking_date' => $bookingDate->toDateString(),
+            'available_times' => $availableTimes,
+            'timezone' => $hostTimezone,
+        ]);
+    }
+
     /**
      * @return array<int, array{starts_at: CarbonImmutable, ends_at: CarbonImmutable}>
      */

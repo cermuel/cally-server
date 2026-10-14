@@ -36,16 +36,28 @@ class BookingDetailsResource extends JsonResource
             'updated_at' => $this->updated_at->toISOString(),
             'event' => $this->when(
                 $this->relationLoaded('event') && $this->event !== null,
-                fn (): array => [
+                fn(): array => [
                     'id' => $this->event->id,
                     'name' => $this->event->name,
                     'slug' => $this->event->slug,
                     'duration_minutes' => $this->event->duration_minutes,
                 ],
             ),
+            'contact' => $this->when(
+                $this->relationLoaded('contact') && $this->contact !== null,
+                fn(): array => [
+                    'platform_user_id' => $this->contact->platform_user_id,
+                    'name' => $this->contact->name,
+                    'email' => $this->contact->email,
+                    'phone' => $this->contact->phone,
+                    'timezone' => $this->contact->timezone,
+                    'company' => $this->contact->company,
+                    'tag' => $this->contact->tag
+                ],
+            ),
             'host' => $this->when(
                 $this->relationLoaded('user') && $this->user !== null,
-                fn (): array => [
+                fn(): array => [
                     'name' => $this->user->name,
                     'email' => $this->user->email,
                     'avatar' => $this->user->avatar_url,
@@ -54,8 +66,8 @@ class BookingDetailsResource extends JsonResource
             ),
             'guests' => $this->whenLoaded(
                 'guests',
-                fn () => $this->guests
-                    ->map(fn (Guest $guest): array => [
+                fn() => $this->guests
+                    ->map(fn(Guest $guest): array => [
                         'id' => $guest->id,
                         'booking_id' => $guest->booking_id,
                         'name' => $guest->name,

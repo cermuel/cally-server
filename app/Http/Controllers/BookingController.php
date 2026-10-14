@@ -59,13 +59,14 @@ class BookingController extends Controller
             ->with(['contact', 'guests'])
             ->findOrFail($id);
 
-        return response()->json(['booking' => $booking, 'message' => 'Booking fetched successfully']);
+        return response()->json(['booking' => new BookingDetailsResource($booking), 'message' => 'Booking fetched successfully']);
     }
 
     public function getBookingDetails(string $id): JsonResponse
     {
         $booking = Booking::query()
             ->with([
+                'contact',
                 'event:id,name,slug,duration_minutes',
                 'user:id,name,email,avatar_url,timezone',
                 'guests' => function (HasMany $query): void {

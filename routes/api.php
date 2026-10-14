@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->get('/connections/google/redirect', [GoogleAu
 
 Route::get('/public/profile', [PublicController::class, 'getProfile']);
 Route::get('/public/{username}/events', [PublicController::class, 'getEvents']);
+Route::get('/public/events/{event}/available-times', [PublicController::class, 'getAvailableTimes'])->whereNumber('event');
 Route::get('/public/events/{event}/schedule', [PublicController::class, 'getUserSchedule']);
 Route::post('/public/schedule', [PublicController::class, 'schedule']);
 
