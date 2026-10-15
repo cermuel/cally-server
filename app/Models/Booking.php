@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\BookingStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -90,6 +91,7 @@ class Booking extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'cancelled_at' => 'datetime',
+            'status' => BookingStatus::class
         ];
     }
 }

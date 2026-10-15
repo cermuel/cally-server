@@ -60,7 +60,7 @@ class AutomationService
 
     protected function autoAcceptBooking(Booking $booking, User $user): void
     {
-        if ($booking->status === BookingStatus::Confirmed) {
+        if ($booking->status === BookingStatus::Confirmed || $booking->contact_id !== null) {
             return;
         }
 
