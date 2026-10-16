@@ -43,7 +43,7 @@ class RescheduleMeetingInviteJob implements ShouldQueue
             Resend::emails()->send([
                 'from' => 'Cally <cally@cermuel.dev>',
                 'to' => [$this->email],
-                'subject' => 'Meeting Invitation',
+                'subject' => 'Meeting Reschedule Request',
                 'html' => EmailTemplate::meetingRescheduleRequest(
                     requesterName: $this->requesterName,
                     meetingName: $this->meetingName,
