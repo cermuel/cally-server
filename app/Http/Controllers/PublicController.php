@@ -506,13 +506,14 @@ class PublicController extends Controller
         $invitationJobs = $responses
             ->where('status', RescheduleStatus::Pending)
             ->map(fn(RescheduleResponse $guest): RescheduleMeetingInviteJob => new RescheduleMeetingInviteJob(
+                $guest->id,
                 $guest->email,
                 $requesterName,
                 $booking->event->name,
                 $meetingTime,
                 $proposedTime,
                 $invitationPath . '?email=' . urlencode($guest->email) . '&reschedule_id=' . $reschedule->id,
-                $guest->guest->name ?? 'there',
+                $guest->guest?->name ?? 'there',
             ));
 
         if ($invitationJobs->isNotEmpty()) {
