@@ -9,10 +9,14 @@ use App\Http\Resources\UserResource;
 use App\Jobs\ConfirmGuestJob;
 use App\Jobs\CreateGoogleMeetJob;
 use App\Jobs\InviteGuestJob;
+use App\Jobs\RescheduleMeetingInviteJob;
 use App\Models\Booking;
 use App\Models\Event;
 use App\Models\Guest;
+use App\Models\Reschedule;
+use App\Models\RescheduleResponse;
 use App\Models\User;
+use App\RescheduleStatus;
 use App\Services\AutomationService;
 use App\Services\NotificationService;
 use App\Support\BookingTime;
@@ -28,13 +32,18 @@ class PublicController extends Controller
 {
     public function __construct(private NotificationService $notificationService, private AutomationService $automationService) {}
 
+    private function frontendUrl(): string
+    {
+        return config('services.frontend_url');
+    }
+
     public function schedule(PublicScheduleRequest $request): JsonResponse
     {
         $body = $request->validated();
 
         $startsAt = BookingTime::toUtc($body['starts_at'], $body['timezone']);
         $endsAt = BookingTime::toUtc($body['ends_at'], $body['timezone']);
-        $lock = Cache::lock('booking-event-'.$body['event_id'].'-starts-'.$startsAt->getTimestamp(), 10);
+        $lock = Cache::lock('booking-event-' . $body['event_id'] . '-starts-' . $startsAt->getTimestamp(), 10);
 
         if (! $lock->get()) {
             return response()->json([
@@ -77,8 +86,7 @@ class PublicController extends Controller
                 $booking->load('user');
                 $this->automationService->run(AutomationTrigger::BookingCreated, $booking, null);
                 $booking->load('event');
-                $frontendUrl = config('services.frontend_url');
-                $this->notificationService->send($user, 'booking.created', "New booking for {$booking->event->name}", null, "{$frontendUrl}/app/bookings?booking_id={$booking->id}", ['booking_id' => $booking->id]);
+                $this->notificationService->send($user, 'booking.created', "New booking for {$booking->event->name}", null, "{$this->frontendUrl()}/app/meetings?booking_id={$booking->id}", ['booking_id' => $booking->id]);
                 CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
                 $this->dispatchGuestEmailBatches($booking, $guests);
                 $booking->unsetRelation('user');
@@ -93,6 +101,70 @@ class PublicController extends Controller
             'message' => 'Booking scheduled successfully',
             'booking' => $booking,
             'guests' => $guests,
+        ], 201);
+    }
+
+    public function requestReschedule(Request $request, string $bookingId)
+    {
+        $body = $request->validate([
+            'email' => ['required', 'email'],
+            'starts_at' => ['required', 'date', 'before:ends_at'],
+            'ends_at' => ['required', 'date', 'after:starts_at'],
+        ]);
+
+        $booking = Booking::with('guests')->where('id', $bookingId)->first();
+
+        if (! $booking) {
+            abort(404, 'Invalid or deleted booking');
+        }
+
+        $hasPendingReschedule = $booking->reschedule()
+            ->where('status', RescheduleStatus::Pending->value)
+            ->exists();
+
+        if ($hasPendingReschedule) {
+            abort(409, 'This booking already has a pending reschedule request.');
+        }
+
+        $requester = $booking->guests()->where('email', $body['email'])->firstOrFail();
+
+        $reschedule = DB::transaction(function () use ($body, $booking, $requester) {
+            $reschedule = $booking->reschedule()->create([
+                'starts_at' => $body['starts_at'],
+                'ends_at' => $body['ends_at'],
+            ]);
+
+            foreach ($booking->guests as $guest) {
+                $reschedule->responses()->create([
+                    'guest_id' => $guest->id,
+                    'status' => $guest->id === $requester->id
+                        ? RescheduleStatus::Accepted
+                        : RescheduleStatus::Pending,
+                    'email' => $guest->email,
+                ]);
+            }
+
+
+
+            $booking->load('user');
+            $reschedule->responses()->create([
+                'user_id' => $booking->user_id,
+                'status' => RescheduleStatus::Pending,
+                'email' => $booking->user->email
+            ]);
+            $user = $booking->user;
+            $this->notificationService->send($user, 'booking.rescheduled', "Booking reschedule request for {$booking->event->name}", null, "{$this->frontendUrl()}/app/meetings?booking_id={$booking->id}", ['booking_id' => $booking->id]);
+            $booking->unsetRelation('user');
+
+            return $reschedule;
+        }, 2);
+
+        $this->dispatchInviteEmailBatches($reschedule, $booking, $requester['name'] ?? $body['email']);
+
+        return response()->json([
+            'message' => 'Meeting request submitted successfully',
+            'reschedule' => $reschedule,
+
         ], 201);
     }
 
@@ -223,7 +295,7 @@ class PublicController extends Controller
         }
 
         foreach ($schedules as &$slots) {
-            usort($slots, fn (array $first, array $second): int => $first['starts_at'] <=> $second['starts_at']);
+            usort($slots, fn(array $first, array $second): int => $first['starts_at'] <=> $second['starts_at']);
         }
         unset($slots);
 
@@ -276,7 +348,7 @@ class PublicController extends Controller
             durationMinutes: (int) $event->duration_minutes,
             dailyBookings: $dailyBookings,
             now: CarbonImmutable::now($hostTimezone),
-        ))->map(fn (array $slot): array => [
+        ))->map(fn(array $slot): array => [
             'time' => $slot['starts_at']->format('H:i'),
             'starts_at' => $slot['starts_at']->utc()->toISOString(),
             'ends_at' => $slot['ends_at']->utc()->toISOString(),
@@ -381,16 +453,16 @@ class PublicController extends Controller
         $frontendUrl = config('services.frontend_url');
         $hostName = $booking->user->name ?? 'Host';
         $meetingTime = BookingTime::formatForGuest($booking, $booking->starts_at);
-        $invitationPath = $frontendUrl.'/public/'.$booking->id.'/request';
-        $confirmationPath = $frontendUrl.'/public/'.$booking->id;
+        $invitationPath = $frontendUrl . '/public/' . $booking->id . '/request';
+        $confirmationPath = $frontendUrl . '/public/' . $booking->id;
 
         $invitationJobs = $guests
             ->where('attendance_status', GuestStatus::Pending)
-            ->map(fn (Guest $guest): InviteGuestJob => new InviteGuestJob(
+            ->map(fn(Guest $guest): InviteGuestJob => new InviteGuestJob(
                 $hostName,
                 $guest->email,
                 $meetingTime,
-                $invitationPath.'?email='.urlencode($guest->email),
+                $invitationPath . '?email=' . urlencode($guest->email),
                 $guest->name ?? 'there',
             ));
 
@@ -403,11 +475,11 @@ class PublicController extends Controller
 
         $confirmationJobs = $guests
             ->where('attendance_status', GuestStatus::Confirmed)
-            ->map(fn (Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
+            ->map(fn(Guest $guest): ConfirmGuestJob => new ConfirmGuestJob(
                 $hostName,
                 $guest->email,
                 $meetingTime,
-                $confirmationPath.'?email='.urlencode($guest->email),
+                $confirmationPath . '?email=' . urlencode($guest->email),
                 $guest->name ?? 'there',
             ));
 
@@ -415,6 +487,38 @@ class PublicController extends Controller
             Bus::batch($confirmationJobs)
                 ->name('meeting-confirm')
                 ->onQueue('meeting-confirm')
+                ->dispatch();
+        }
+    }
+
+    private function dispatchInviteEmailBatches(Reschedule $reschedule, Booking $booking, string $requesterName): void
+    {
+        $responses = $reschedule->responses()
+            ->with('guest')
+            ->whereNotNull('guest_id')
+            ->get();
+
+        $frontendUrl = config('services.frontend_url');
+        $meetingTime = BookingTime::formatForGuest($booking, $booking->starts_at);
+        $proposedTime = BookingTime::formatForGuest($booking, $reschedule->starts_at);
+        $invitationPath = $frontendUrl . '/public/' . $booking->id . '/reschedule';
+
+        $invitationJobs = $responses
+            ->where('status', RescheduleStatus::Pending)
+            ->map(fn(RescheduleResponse $guest): RescheduleMeetingInviteJob => new RescheduleMeetingInviteJob(
+                $guest->email,
+                $requesterName,
+                $booking->event->name,
+                $meetingTime,
+                $proposedTime,
+                $invitationPath . '?email=' . urlencode($guest->email) . '&reschedule_id=' . $reschedule->id,
+                $guest->guest->name ?? 'there',
+            ));
+
+        if ($invitationJobs->isNotEmpty()) {
+            Bus::batch($invitationJobs)
+                ->name('meeting-reschedule')
+                ->onQueue('meeting-invite')
                 ->dispatch();
         }
     }

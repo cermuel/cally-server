@@ -85,13 +85,18 @@ class Booking extends Model
         return $this->hasMany(Guest::class);
     }
 
+    public function reschedule(): HasMany
+    {
+        return $this->hasMany(Reschedule::class);
+    }
+
     protected function casts(): array
     {
         return [
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'cancelled_at' => 'datetime',
-            'status' => BookingStatus::class
+            'status' => BookingStatus::class,
         ];
     }
 }

@@ -4,14 +4,13 @@ namespace App\Support;
 
 class EmailTemplate
 {
-
     public static function resetPassword(
         string $resetUrl,
         string $expiresIn = 'one hour',
         ?string $name = null,
     ): string {
         return view('emails.reset-password', [
-            'greeting' => filled($name) ? 'Hello ' . trim($name) : 'Hello',
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
             'resetUrl' => $resetUrl,
             'expiresIn' => $expiresIn,
         ])->render();
@@ -42,7 +41,7 @@ class EmailTemplate
         ?string $name = null,
     ): string {
         return view('emails.booking-invitation', [
-            'greeting' => filled($name) ? 'Hello ' . trim($name) : 'Hello',
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
             'hostName' => $hostName,
             'meetingTime' => $meetingTime,
             'invitationUrl' => $invitationUrl,
@@ -77,6 +76,24 @@ class EmailTemplate
         ])->render();
     }
 
+    public static function meetingRescheduleRequest(
+        string $requesterName,
+        string $meetingName,
+        string $currentMeetingTime,
+        string $proposedMeetingTime,
+        string $responseUrl,
+        ?string $name = null,
+    ): string {
+        return view('emails.meeting-reschedule-request', [
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'requesterName' => $requesterName,
+            'meetingName' => $meetingName,
+            'currentMeetingTime' => $currentMeetingTime,
+            'proposedMeetingTime' => $proposedMeetingTime,
+            'responseUrl' => $responseUrl,
+        ])->render();
+    }
+
     public static function notification(
         string $title,
         ?string $message = null,
@@ -84,7 +101,7 @@ class EmailTemplate
         ?string $name = null,
     ): string {
         return view('emails.notification', [
-            'greeting' => filled($name) ? 'Hello ' . trim($name) : 'Hello',
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
             'title' => $title,
             'message' => $message,
             'actionUrl' => $actionUrl,

@@ -13,6 +13,8 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\RescheduleController;
+use App\Http\Controllers\RescheduleResponseController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamInviteController;
 use App\Http\Controllers\TeamMemberController;
@@ -43,6 +45,9 @@ Route::get('/public/{username}/events', [PublicController::class, 'getEvents']);
 Route::get('/public/events/{event}/available-times', [PublicController::class, 'getAvailableTimes'])->whereNumber('event');
 Route::get('/public/events/{event}/schedule', [PublicController::class, 'getUserSchedule']);
 Route::post('/public/schedule', [PublicController::class, 'schedule']);
+Route::post('/public/{bookingId}/reschedule', [PublicController::class, 'requestReschedule']);
+Route::get('/public/reschedule-responses/{email}', [RescheduleResponseController::class, 'responseByEmail']);
+Route::patch('/public/reschedule-responses/{id}', [RescheduleResponseController::class, 'update']);
 
 Route::get('/bookings/details/{id}', [BookingController::class, 'getBookingDetails']);
 Route::get('/guest/{email}', [GuestController::class, 'guestByEmail']);
@@ -68,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('automations', AutomationController::class)->whereNumber('automation');
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
+    Route::apiResource('reschedules', RescheduleController::class)->only(['index', 'show']);
     Route::apiResource('teams', TeamController::class);
     Route::get('/teams/{team}/members', [TeamMemberController::class, 'index'])->whereNumber('team');
     Route::patch('/teams/{team}/members/{member}', [TeamMemberController::class, 'update'])->whereNumber(['team', 'member'])->scopeBindings();

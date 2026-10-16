@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->hasMany(Recurrence::class);
     }
 
+    public function rescheduleResponses(): HasMany
+    {
+        return $this->hasMany(RescheduleResponse::class);
+    }
+
     public function notificationPreferences(): array
     {
         $defaults = [

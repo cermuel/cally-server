@@ -49,7 +49,7 @@ class NotificationController extends Controller
     {
         $user = $request->user();
         $frontendUrl = config('services.frontend_url');
-        $this->notificationService->send($user, 'booking.created', 'New booking for Test Booking', null, "{$frontendUrl}/app/bookings?booking_id=30", ['booking_id' => 30]);
+        $this->notificationService->send($user, 'booking.created', 'New booking for Test Booking', null, "{$frontendUrl}/app/meetings?booking_id=30", ['booking_id' => 30]);
     }
 
     public function readAll(Request $request): JsonResponse
