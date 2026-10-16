@@ -5,6 +5,7 @@ namespace App\Services;
 use App\AutomationAction;
 use App\AutomationTrigger;
 use App\BookingStatus;
+use App\Jobs\AddContactAutomationJob;
 use App\Jobs\CompleteMeetingJob;
 use App\Jobs\SendAutomationEmailJob;
 use App\Jobs\UpdateGoogleMeetGuestsJob;
@@ -51,7 +52,7 @@ class AutomationService
 
                 AutomationAction::SendEmail => $this->sendEmail($booking, $automation),
 
-                AutomationAction::AddToContact => null,
+                AutomationAction::AddToContact => $this->addToContact($booking, $user, $automation),
             };
         }
     }
@@ -75,6 +76,30 @@ class AutomationService
             $user->name
         )->onQueue('meeting');
         CompleteMeetingJob::dispatch($booking->id)->onQueue('meeting')->delay($booking->ends_at);
+    }
+
+    protected function addToContact(Booking $booking, User $user, Automation $automation): void
+    {
+        $booking->loadMissing(['guests']);
+
+        $jobs = $booking->guests->filter(function ($guest) use ($automation) {
+            if ($automation->payload['guestType'] ?? false) {
+                return $guest->attendance_status == $automation->payload['guestType'];
+            }
+
+            return $guest;
+        })->map(function ($guest) use ($user) {
+            return new AddContactAutomationJob(
+                $guest->email,
+                $guest->name,
+                $user->id,
+            );
+        })->toArray();
+
+        if (empty($jobs)) {
+            return;
+        }
+        Bus::batch($jobs)->name('automation-add-contact')->onQueue('automation-add-contact')->dispatch();
     }
 
     protected function sendEmail(Booking $booking, Automation $automation): void

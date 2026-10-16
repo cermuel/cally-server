@@ -32,6 +32,7 @@ class SendAutomationEmailJob implements ShouldQueue
 
     public function handle(): void
     {
+        if ($this->batch()?->cancelled()) return;
         $automation = Automation::findOrFail($this->automationId);
 
         $booking = Booking::with(['event', 'user', 'guests'])->findOrFail($this->bookingId);

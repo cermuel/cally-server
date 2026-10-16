@@ -491,7 +491,7 @@ class PublicController extends Controller
         }
     }
 
-    private function dispatchInviteEmailBatches(Reschedule $reschedule, Booking $booking, string $requesterName): void
+    public function dispatchInviteEmailBatches(Reschedule $reschedule, Booking $booking, string $requesterName): void
     {
         $responses = $reschedule->responses()
             ->with('guest')
