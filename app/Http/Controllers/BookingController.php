@@ -87,7 +87,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function update(BookingRequest $request, string $id)
+    public function update(BookingRequest $request, string $id): JsonResponse
     {
         $user = $request->user();
         $booking = $user->bookings()->findOrFail($id);
@@ -95,6 +95,15 @@ class BookingController extends Controller
             $request->validated(),
             $booking->booking_timezone ?? $user->timezone,
         );
+
+        $changesRecurringSchedule = array_intersect(
+            ['starts_at', 'ends_at', 'booking_timezone', 'event_id'],
+            array_keys($body),
+        ) !== [];
+
+        if ($booking->recurrence_id && ($changesRecurringSchedule || ($body['status'] ?? null) === BookingStatus::Cancelled->value)) {
+            abort(409, 'Recurring meetings must be changed from the recurring meeting.');
+        }
 
         if (($body['status'] ?? null) === BookingStatus::Cancelled->value) {
             $body['cancelled_at'] = now();
@@ -132,6 +141,11 @@ class BookingController extends Controller
     public function destroy(Request $request, string $id): JsonResponse
     {
         $booking = $request->user()->bookings()->with('user')->findOrFail($id);
+
+        if ($booking->recurrence_id) {
+            abort(409, 'Recurring meetings must be deleted from the recurring meeting.');
+        }
+
         if (now()->lessThan($booking->ends_at) && $booking->status !== BookingStatus::Cancelled) {
             retry(3, function () use ($booking) {
                 app(GoogleCalendarService::class)->cancelBookingEvent($booking);

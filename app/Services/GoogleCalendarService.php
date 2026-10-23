@@ -4,18 +4,85 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\Connection;
+use App\Models\Recurrence;
+use Carbon\CarbonImmutable;
 use Google\Client as GoogleClient;
 use Google\Service\Calendar;
+use Google\Service\Calendar\ConferenceData;
+use Google\Service\Calendar\ConferenceSolutionKey;
+use Google\Service\Calendar\CreateConferenceRequest;
 use Google\Service\Calendar\Event;
 use Google\Service\Calendar\EventAttendee;
 use Google\Service\Calendar\EventDateTime;
-use Google\Service\Calendar\ConferenceData;
-use Google\Service\Calendar\CreateConferenceRequest;
-use Google\Service\Calendar\ConferenceSolutionKey;
 use Illuminate\Support\Str;
 
 class GoogleCalendarService
 {
+    public function createRecurringEvent(
+        Recurrence $recurrence,
+        array $guests = [],
+    ): Event {
+        $booking = Booking::where('recurrence_id', $recurrence->id)
+            ->orderBy('starts_at')
+            ->firstOrFail();
+
+        $frequency = $recurrence->frequency instanceof \BackedEnum
+            ? $recurrence->frequency->value
+            : $recurrence->frequency;
+
+        $timezone = $recurrence->timezone;
+
+        $until = CarbonImmutable::parse($recurrence->ends_on, $timezone)
+            ->endOfDay()
+            ->utc()
+            ->format('Ymd\THis\Z');
+
+        $rule = 'RRULE:FREQ='.strtoupper($frequency)
+            .';INTERVAL='.(int) $recurrence->interval
+            .';UNTIL='.$until;
+
+        if ($frequency === 'weekly') {
+            $days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+            $rule .= ';BYDAY='.implode(',', array_map(
+                fn ($day) => $days[(int) $day],
+                $recurrence->days_of_week,
+            )).';WKST=MO';
+        }
+
+        $event = new Event([
+            'summary' => $booking->event->name,
+            'description' => $booking->event->description,
+            'start' => new EventDateTime([
+                'dateTime' => $booking->starts_at->toRfc3339String(),
+                'timeZone' => $timezone,
+            ]),
+            'end' => new EventDateTime([
+                'dateTime' => $booking->ends_at->toRfc3339String(),
+                'timeZone' => $timezone,
+            ]),
+            'recurrence' => [$rule],
+            'attendees' => $this->attendees($guests),
+            'conferenceData' => new ConferenceData([
+                'createRequest' => new CreateConferenceRequest([
+                    'requestId' => (string) Str::uuid(),
+                    'conferenceSolutionKey' => new ConferenceSolutionKey([
+                        'type' => 'hangoutsMeet',
+                    ]),
+                ]),
+            ]),
+        ]);
+
+        return $this->calendar($booking)->events->insert(
+            $this->connection($booking)->calendar_id ?? 'primary',
+            $event,
+            [
+                'conferenceDataVersion' => 1,
+                'sendUpdates' => 'all',
+            ],
+        );
+    }
+
     public function createBookingEvent(Booking $booking, array $guests = []): Event
     {
         $calendar = $this->calendar($booking);
@@ -94,7 +161,7 @@ class GoogleCalendarService
         );
 
         $removeEmails = collect($emails)
-            ->map(fn($email) => strtolower($email))
+            ->map(fn ($email) => strtolower($email))
             ->all();
 
         $remainingAttendees = collect($event->getAttendees() ?? [])
@@ -126,8 +193,6 @@ class GoogleCalendarService
             $connection->calendar_id ?? 'primary',
             $booking->provider_event_id
         );
-
-
 
         if (isset($data['starts_at'])) {
             $event->setStart(new EventDateTime([
@@ -188,7 +253,7 @@ class GoogleCalendarService
     private function uniqueAttendees(array $attendees): array
     {
         return collect($attendees)
-            ->keyBy(fn(EventAttendee $attendee) => strtolower($attendee->getEmail()))
+            ->keyBy(fn (EventAttendee $attendee) => strtolower($attendee->getEmail()))
             ->values()
             ->all();
     }
@@ -207,7 +272,7 @@ class GoogleCalendarService
 
     private function client(Connection $connection): GoogleClient
     {
-        $client = new GoogleClient();
+        $client = new GoogleClient;
 
         $client->setClientId(config('services.google.client_id'));
         $client->setClientSecret(config('services.google.client_secret'));

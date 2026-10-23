@@ -23,7 +23,7 @@ class ConfirmGuestJob implements ShouldQueue
         return [30, 90, 180];
     }
 
-    public function __construct(public string $hostName, public string $email, public string $meetingTime, public string $url, public string $name)
+    public function __construct(public string $hostName, public string $email, public string $meetingTime, public string $url, public string $name, public ?string $scheduleDescription = null)
     {
         $this->afterCommit();
     }
@@ -36,13 +36,19 @@ class ConfirmGuestJob implements ShouldQueue
                 'from' => 'Cally <cally@cermuel.dev>',
                 'to' => [$this->email],
                 'subject' => 'Meeting Confirmation',
-                'html' => EmailTemplate::bookingConfirmation(
-                    name: $this->name,
-                    hostName: $this->hostName,
-                    meetingTime: $this->meetingTime,
-                    bookingUrl: $this->url,
-
-                ),
+                'html' => $this->scheduleDescription ?
+                    EmailTemplate::recurringBookingConfirmation(
+                        name: $this->name,
+                        hostName: $this->hostName,
+                        meetingTime: $this->meetingTime,
+                        bookingUrl: $this->url,
+                        recurrenceSchedule: $this->scheduleDescription
+                    ) : EmailTemplate::bookingConfirmation(
+                        name: $this->name,
+                        hostName: $this->hostName,
+                        meetingTime: $this->meetingTime,
+                        bookingUrl: $this->url,
+                    ),
             ]);
         }, 60);
 

@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-
 use App\Models\Booking;
 use App\Services\GoogleCalendarService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,14 +14,15 @@ class UpdateGoogleMeetGuestsJob implements ShouldQueue
     use Queueable;
 
     public int $tries = 3;
+
     public int $timeout = 45;
+
     public function backoff(): array
     {
         return [30, 90, 180];
     }
 
-    public function __construct(public int $bookingId, public bool $isAdd, public string $email, public ?string $name) {}
-
+    public function __construct(public int $bookingId, public bool $isAdd, public string $email, public ?string $name = null) {}
 
     public function handle(): void
     {
@@ -36,7 +36,7 @@ class UpdateGoogleMeetGuestsJob implements ShouldQueue
             if ($this->isAdd) {
                 app(GoogleCalendarService::class)->addGuests($booking, [[
                     'email' => $this->email,
-                    'name' => $this->name
+                    'name' => $this->name,
                 ]]);
             } else {
                 app(GoogleCalendarService::class)->removeGuests($booking, [$this->email]);
@@ -47,7 +47,6 @@ class UpdateGoogleMeetGuestsJob implements ShouldQueue
             $this->release(60);
         }
     }
-
 
     public function failed(Throwable $exception): void
     {

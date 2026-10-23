@@ -16,7 +16,7 @@ class BookingRequest extends FormRequest
 
     public function rules(): array
     {
-        // 'event_id', 'starts_at', 'ends_at', 'status', 'provider_event_id', 'meeting_url', 'notes', 'cancellation_reason', 'cancelled_at'
+
         if ($this->isMethod('post')) {
             return [
                 'starts_at' => ['nullable', 'date', 'before:ends_at'],
@@ -27,14 +27,14 @@ class BookingRequest extends FormRequest
                     'string',
                     'required',
                     Rule::exists('events', 'id')->where(
-                        fn(Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                        fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
                     ),
                 ],
                 'contact_id' => [
                     'nullable',
                     'integer',
                     Rule::exists('contacts', 'id')->where(
-                        fn(Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                        fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
                     ),
                 ],
             ];
@@ -51,7 +51,7 @@ class BookingRequest extends FormRequest
                 'string',
                 'nullable',
                 Rule::exists('events', 'id')->where(
-                    fn(Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                    fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
                 ),
             ],
         ];

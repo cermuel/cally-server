@@ -13,6 +13,7 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\RecurrenceController;
 use App\Http\Controllers\RescheduleController;
 use App\Http\Controllers\RescheduleResponseController;
 use App\Http\Controllers\TeamController;
@@ -44,6 +45,7 @@ Route::get('/public/profile', [PublicController::class, 'getProfile']);
 Route::get('/public/{username}/events', [PublicController::class, 'getEvents']);
 Route::get('/public/events/{event}/available-times', [PublicController::class, 'getAvailableTimes'])->whereNumber('event');
 Route::get('/public/events/{event}/schedule', [PublicController::class, 'getUserSchedule']);
+Route::get('/public/recurrence/{id}', [PublicController::class, 'getRecurrence'])->whereNumber('id');
 Route::post('/public/schedule', [PublicController::class, 'schedule']);
 Route::post('/public/{bookingId}/reschedule', [PublicController::class, 'requestReschedule']);
 Route::get('/public/reschedule-responses/{email}', [RescheduleResponseController::class, 'responseByEmail']);
@@ -74,6 +76,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('connections', ConnectionController::class)->only(['index']);
     Route::apiResource('links', LinkController::class);
     Route::apiResource('reschedules', RescheduleController::class)->only(['index', 'show']);
+    Route::post('/bookings/{bookingId}/reschedules', [RescheduleController::class, 'store'])
+        ->whereNumber('bookingId')
+        ->name('bookings.reschedules.store');
+    Route::apiResource('recurrence', RecurrenceController::class)->only(['index', 'show', 'destroy', 'store']);
     Route::apiResource('teams', TeamController::class);
     Route::get('/teams/{team}/members', [TeamMemberController::class, 'index'])->whereNumber('team');
     Route::patch('/teams/{team}/members/{member}', [TeamMemberController::class, 'update'])->whereNumber(['team', 'member'])->scopeBindings();

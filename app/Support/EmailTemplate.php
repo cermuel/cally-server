@@ -48,6 +48,22 @@ class EmailTemplate
         ])->render();
     }
 
+    public static function recurringBookingInvitation(
+        string $hostName,
+        string $meetingTime,
+        string $invitationUrl,
+        string $recurrenceSchedule,
+        ?string $name = null,
+    ): string {
+        return view('emails.recurring-booking-invitation', [
+            'greeting' => filled($name) ? 'Hello '.trim($name) : 'Hello',
+            'hostName' => $hostName,
+            'meetingTime' => $meetingTime,
+            'invitationUrl' => $invitationUrl,
+            'recurrenceSchedule' => $recurrenceSchedule,
+        ])->render();
+    }
+
     public static function teamInvitation(
         string $inviterName,
         string $teamName,
@@ -73,6 +89,22 @@ class EmailTemplate
             'hostName' => $hostName,
             'meetingTime' => $meetingTime,
             'bookingUrl' => $bookingUrl,
+        ])->render();
+    }
+
+    public static function recurringBookingConfirmation(
+        string $name,
+        string $hostName,
+        string $meetingTime,
+        string $bookingUrl,
+        string $recurrenceSchedule,
+    ): string {
+        return view('emails.recurring-booking-confirmation', [
+            'name' => $name,
+            'hostName' => $hostName,
+            'meetingTime' => $meetingTime,
+            'bookingUrl' => $bookingUrl,
+            'recurrenceSchedule' => $recurrenceSchedule,
         ])->render();
     }
 
