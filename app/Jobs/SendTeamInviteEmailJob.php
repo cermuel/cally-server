@@ -43,7 +43,7 @@ class SendTeamInviteEmailJob implements ShouldQueue
         }, 60);
 
         if (! $executed) {
-            $this->release(max(1, RateLimiter::availableIn('send-invite-email')));
+            $this->release(max(1, RateLimiter::availableIn('send-invite-email')) + 1);
         }
     }
 

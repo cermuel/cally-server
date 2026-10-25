@@ -93,11 +93,11 @@ class GoogleCalendarService
             'description' => $booking->event->description,
             'start' => new EventDateTime([
                 'dateTime' => $booking->starts_at->toRfc3339String(),
-                'timeZone' => $booking->user->timezone,
+                'timeZone' => $booking->booking_timezone ?? $booking->user->timezone,
             ]),
             'end' => new EventDateTime([
                 'dateTime' => $booking->ends_at->toRfc3339String(),
-                'timeZone' => $booking->user->timezone,
+                'timeZone' => $booking->booking_timezone ?? $booking->user->timezone,
             ]),
             'attendees' => $this->attendees($guests),
             'conferenceData' => new ConferenceData([
@@ -194,18 +194,26 @@ class GoogleCalendarService
             $booking->provider_event_id
         );
 
-        if (isset($data['starts_at'])) {
+        if (isset($data['starts_at']) || isset($data['timezone'])) {
             $event->setStart(new EventDateTime([
-                'dateTime' => $data['starts_at']->toRfc3339String(),
-                'timeZone' => $booking->user->timezone,
+                'dateTime' => $booking->starts_at->toRfc3339String(),
+                'timeZone' => $booking->booking_timezone ?? $booking->user->timezone,
             ]));
         }
 
-        if (isset($data['ends_at'])) {
+        if (isset($data['ends_at']) || isset($data['timezone'])) {
             $event->setEnd(new EventDateTime([
-                'dateTime' => $data['ends_at']->toRfc3339String(),
-                'timeZone' => $booking->user->timezone,
+                'dateTime' => $booking->ends_at->toRfc3339String(),
+                'timeZone' => $booking->booking_timezone ?? $booking->user->timezone,
             ]));
+        }
+
+        if (isset($data['name'])) {
+            $event->setSummary($booking->event->name);
+        }
+
+        if (array_key_exists('description', $data)) {
+            $event->setDescription($booking->event->description);
         }
 
         return $calendar->events->update(

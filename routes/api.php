@@ -16,6 +16,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\RecurrenceController;
 use App\Http\Controllers\RescheduleController;
 use App\Http\Controllers\RescheduleResponseController;
+use App\Http\Controllers\TeamBookingController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamInviteController;
 use App\Http\Controllers\TeamMemberController;
@@ -81,6 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('bookings.reschedules.store');
     Route::apiResource('recurrence', RecurrenceController::class)->only(['index', 'show', 'destroy', 'store']);
     Route::apiResource('teams', TeamController::class);
+    Route::apiResource('/teams/{teamId}/bookings', TeamBookingController::class)
+        ->parameters(['bookings' => 'bookingId'])
+        ->whereNumber(['teamId', 'bookingId']);
     Route::get('/teams/{team}/members', [TeamMemberController::class, 'index'])->whereNumber('team');
     Route::patch('/teams/{team}/members/{member}', [TeamMemberController::class, 'update'])->whereNumber(['team', 'member'])->scopeBindings();
     Route::delete('/teams/{team}/members/{member}', [TeamMemberController::class, 'destroy'])->whereNumber(['team', 'member'])->scopeBindings();

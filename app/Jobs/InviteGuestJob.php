@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Support\EmailTemplate;
+use DateTimeInterface;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -16,7 +17,12 @@ class InviteGuestJob implements ShouldQueue
 
     public int $timeout = 30;
 
-    public int $tries = 3;
+    public int $maxExceptions = 3;
+
+    public function retryUntil(): DateTimeInterface
+    {
+        return now()->addHours(2);
+    }
 
     public function backoff(): array
     {
@@ -31,7 +37,7 @@ class InviteGuestJob implements ShouldQueue
     public function handle(): void
     {
 
-        $executed = RateLimiter::attempt('invite-guest', 5, function () {
+        $executed = RateLimiter::attempt('invite-guest', 20, function () {
             Resend::emails()->send([
                 'from' => 'Cally <cally@cermuel.dev>',
                 'to' => [$this->email],
@@ -53,7 +59,11 @@ class InviteGuestJob implements ShouldQueue
         }, 60);
 
         if (! $executed) {
-            $this->release();
+            $this->release(
+                RateLimiter::availableIn('invite-guest') + 1
+            );
+
+            return;
         }
     }
 
