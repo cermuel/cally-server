@@ -31,6 +31,10 @@ class Recurrence extends Model
     {
         return $query->when($filters['event_id'] ?? false, function ($query, $eventId) {
             $query->where('event_id', $eventId);
+        })->when($filters['team_id'] ?? false, function ($query, $teamId) {
+            $query->whereHas('event', function ($query) use ($teamId) {
+                $query->where('team_id', $teamId);
+            });
         });
     }
 
@@ -76,14 +80,14 @@ class Recurrence extends Model
             ];
 
             $days = collect($this->days_of_week)
-                ->map(fn (int $day): string => $dayNames[$day])
+                ->map(fn(int $day): string => $dayNames[$day])
                 ->join(', ', ' and ');
 
             $description .= " on {$days}";
         }
 
         if ($this->ends_on !== null) {
-            $description .= ' until '.$this->ends_on->format('j F Y');
+            $description .= ' until ' . $this->ends_on->format('j F Y');
         }
 
         return $description;

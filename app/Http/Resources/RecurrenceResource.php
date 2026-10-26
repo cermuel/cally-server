@@ -30,10 +30,11 @@ class RecurrenceResource extends JsonResource
             'user' => new UserResource($this->whenLoaded('user')),
             'event' => $this->when(
                 $this->relationLoaded('event') && $this->event !== null,
-                fn (): array => [
+                fn(): array => [
                     'id' => $this->event->id,
                     'name' => $this->event->name,
                     'slug' => $this->event->slug,
+                    'team_id' => $this->event->team_id,
                     'duration_minutes' => $this->event->duration_minutes,
                 ],
             ),

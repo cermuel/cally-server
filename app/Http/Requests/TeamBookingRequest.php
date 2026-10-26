@@ -67,7 +67,7 @@ class TeamBookingRequest extends FormRequest
                 'sometimes',
                 'array:name,slug,description,color,status,duration_minutes,pre_meeting_minutes,post_meeting_minutes',
             ],
-            'event.name' => ['sometimes', 'string', 'min:4', 'max:20'],
+            'event.name' => ['sometimes', 'string', 'min:4', 'max:30'],
             'event.slug' => [
                 'sometimes',
                 'string',

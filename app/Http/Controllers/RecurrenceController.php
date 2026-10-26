@@ -7,7 +7,10 @@ use App\Http\Resources\RecurrenceResource;
 use App\Jobs\CreateRecurringBookings;
 use App\Jobs\CreateRecurringGoogleMeetJob;
 use App\Jobs\InviteGuestJob;
+use App\Jobs\TeamBookingInviteJob;
 use App\Models\Recurrence;
+use App\Models\Team;
+use App\Models\TeamMember;
 use App\Services\GoogleCalendarService;
 use App\Support\BookingTime;
 use Carbon\CarbonImmutable;
@@ -21,7 +24,7 @@ class RecurrenceController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
-        $filters = $request->only(['event_id']);
+        $filters = $request->only(['event_id', 'team_id']);
 
         $recurrences = Recurrence::with(['user', 'event'])->where('user_id', $user->id)->filter($filters)->paginate();
 
@@ -37,7 +40,6 @@ class RecurrenceController extends Controller
                 'to' => $recurrences->lastItem(),
                 'previous_page_url' => $recurrences->previousPageUrl(),
                 'next_page_url' => $recurrences->nextPageUrl(),
-
             ],
         ]);
     }
@@ -179,51 +181,103 @@ class RecurrenceController extends Controller
                 'timezone' => $user->timezone,
             ]);
 
-            $jobs = [];
-            foreach ($occurrences as $occurrence) {
-                $jobs[] = new CreateRecurringBookings(
-                    $user->id,
-                    $occurrence,
-                    $event->id,
-                    $recurrence->id,
-                    $user->timezone,
-                    $body['contact_id'] ?? null,
-                );
+            if (isset($body['contact_id'])) {
+                $jobs = [];
+                foreach ($occurrences as $occurrence) {
+                    $jobs[] = new CreateRecurringBookings(
+                        $user->id,
+                        $occurrence,
+                        $event->id,
+                        $recurrence->id,
+                        $user->timezone,
+                        $body['contact_id'],
+                        null
+                    );
+                }
+
+                DB::afterCommit(function () use ($jobs, $recurrence) {
+                    Bus::batch($jobs)
+                        ->onQueue('recurring-meeting')
+                        ->name('recurring-meeting-finite')
+                        ->then(function () use ($recurrence) {
+                            $booking = $recurrence->bookings()
+                                ->with(['contact', 'user'])
+                                ->orderBy('starts_at')
+                                ->firstOrFail();
+
+                            CreateRecurringGoogleMeetJob::dispatch($recurrence->id)->onQueue('recurring-meeting');
+
+                            if ($booking->contact) {
+                                $frontendUrl = config('services.frontend_url');
+                                $hostName = $booking->user->name ?? 'Host';
+                                $meetingTime = BookingTime::formatForGuest($booking, $booking->starts_at);
+                                $invitationUrl = $frontendUrl . '/public/' . $booking->id . '/request?' . http_build_query([
+                                    'recurrence_id' => $recurrence->id,
+                                    'email' => $booking->contact->email,
+                                ]);
+
+                                InviteGuestJob::dispatch(
+                                    $hostName,
+                                    $booking->contact->email,
+                                    $meetingTime,
+                                    $invitationUrl,
+                                    $booking->contact->name ?? 'there',
+                                    $recurrence->scheduleDescription(),
+                                )->onQueue('meeting-invite');
+                            }
+                        })
+                        ->dispatch();
+                });
+            } else if (isset($body['team_id'])) {
+                $team = Team::with('members')->where('id', $body['team_id'])->first();
+                if (!$team) return;
+                $event->update(['team_id' => $team->id]);
+                $jobs = [];
+                foreach ($occurrences as $occurrence) {
+                    $jobs[] = new CreateRecurringBookings(
+                        $user->id,
+                        $occurrence,
+                        $event->id,
+                        $recurrence->id,
+                        $user->timezone,
+                        null,
+                        $body['team_id']
+                    );
+                }
+
+                DB::afterCommit(function () use ($jobs, $recurrence, $team) {
+                    Bus::batch($jobs)
+                        ->onQueue('recurring-meeting')
+                        ->name('recurring-meeting-finite')
+                        ->then(function () use ($recurrence, $team) {
+                            $booking = $recurrence->bookings()
+                                ->orderBy('starts_at')
+                                ->firstOrFail();
+
+                            CreateRecurringGoogleMeetJob::dispatch($recurrence->id)->onQueue('recurring-meeting');
+
+                            $team->loadMissing(['members']);
+                            $frontendUrl = config('services.frontend_url');
+                            $invitationJobs = $team->members
+                                ->map(fn(TeamMember $guest): TeamBookingInviteJob => new TeamBookingInviteJob(
+                                    $team->slug,
+                                    $guest->user_id,
+                                    $recurrence->id,
+                                    $frontendUrl,
+                                    true
+                                ));
+                            if ($invitationJobs->isNotEmpty()) {
+                                Bus::batch($invitationJobs)
+                                    ->name('meeting-invite')
+                                    ->onQueue('meeting-invite')
+                                    ->dispatch();
+                            }
+                        })
+                        ->dispatch();
+                });
             }
 
-            DB::afterCommit(function () use ($jobs, $recurrence) {
-                Bus::batch($jobs)
-                    ->onQueue('recurring-meeting')
-                    ->name('recurring-meeting-finite')
-                    ->then(function () use ($recurrence) {
-                        $booking = $recurrence->bookings()
-                            ->with(['contact', 'user'])
-                            ->orderBy('starts_at')
-                            ->firstOrFail();
 
-                        CreateRecurringGoogleMeetJob::dispatch($recurrence->id)->onQueue('recurring-meeting');
-
-                        if ($booking->contact) {
-                            $frontendUrl = config('services.frontend_url');
-                            $hostName = $booking->user->name ?? 'Host';
-                            $meetingTime = BookingTime::formatForGuest($booking, $booking->starts_at);
-                            $invitationUrl = $frontendUrl.'/public/'.$booking->id.'/request?'.http_build_query([
-                                'recurrence_id' => $recurrence->id,
-                                'email' => $booking->contact->email,
-                            ]);
-
-                            InviteGuestJob::dispatch(
-                                $hostName,
-                                $booking->contact->email,
-                                $meetingTime,
-                                $invitationUrl,
-                                $booking->contact->name ?? 'there',
-                                $recurrence->scheduleDescription(),
-                            )->onQueue('meeting-invite');
-                        }
-                    })
-                    ->dispatch();
-            });
 
             return $recurrence;
         });

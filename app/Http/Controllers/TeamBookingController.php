@@ -102,16 +102,17 @@ class TeamBookingController extends Controller
         }, 2);
 
         DB::afterCommit(function () use ($booking, $team) {
-            $this->automationService->run(AutomationTrigger::BookingCreated, $booking, null);
+            $this->automationService->run(AutomationTrigger::ookingCreated, $booking, null);
             CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
             $team->loadMissing(['members']);
             $frontendUrl = config('services.frontend_url');
             $invitationJobs = $team->members
                 ->map(fn(TeamMember $guest): TeamBookingInviteJob => new TeamBookingInviteJob(
-                    $guest->team_id,
+                    $team->slug,
                     $guest->user_id,
                     $booking->id,
-                    $frontendUrl
+                    $frontendUrl,
+                    false
                 ));
             if ($invitationJobs->isNotEmpty()) {
                 Bus::batch($invitationJobs)

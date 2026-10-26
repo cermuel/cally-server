@@ -6,7 +6,9 @@ use App\BookingStatus;
 use App\GuestStatus;
 use App\Models\Booking;
 use App\Models\Contact;
+use App\Models\Event;
 use App\Models\Recurrence;
+use App\Models\Team;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -26,7 +28,7 @@ class CreateRecurringBookings implements ShouldQueue
         return [5, 10, 20];
     }
 
-    public function __construct(public int $userId, public array $occurrence, public int $eventId, public int $recurrenceId, public string $timezone, public ?int $contactId) {}
+    public function __construct(public int $userId, public array $occurrence, public int $eventId, public int $recurrenceId, public string $timezone, public ?int $contactId, public ?int $teamId) {}
 
     public function handle(): void
     {
@@ -41,8 +43,6 @@ class CreateRecurringBookings implements ShouldQueue
         }
 
         DB::transaction(function () {
-            $contact = Contact::where('id', $this->contactId)->first();
-
             $booking = Booking::firstOrCreate([
                 'recurrence_id' => $this->recurrenceId,
                 'starts_at' => $this->occurrence['starts_at'],
@@ -52,16 +52,44 @@ class CreateRecurringBookings implements ShouldQueue
                 'ends_at' => $this->occurrence['ends_at'],
                 'booking_timezone' => $this->timezone,
                 'status' => BookingStatus::Pending,
-                'contact_id' => $this->contactId,
+                'contact_id' => $this->contactId ?? null,
             ]);
 
-            if ($contact) {
-                $booking->guests()->firstOrCreate([
-                    'email' => $contact->email,
-                ], [
-                    'name' => $contact->name ?? 'there',
-                    'attendance_status' => GuestStatus::Pending->value,
-                ]);
+            if ($this->contactId) {
+                $contact = Contact::where('id', $this->contactId)->first();
+                if ($contact) {
+                    $booking->guests()->firstOrCreate([
+                        'email' => $contact->email,
+                    ], [
+                        'name' => $contact->name ?? 'there',
+                        'attendance_status' => GuestStatus::Pending->value,
+                    ]);
+                }
+            }
+            if ($this->teamId) {
+                $event = Event::findOrFail($booking->eventId);
+                $team = Team::where('id', $this->teamId)->first();
+                if ($team) {
+                    $event->update([
+                        'team_id' => $this->teamId,
+                    ]);
+                    $team->loadMissing(['members', 'members.user']);
+                    $now = now();
+
+                    $guests = $team->members->map(fn($member) => [
+                        'booking_id' => $booking->id,
+                        'user_id' => $member->user_id,
+                        'email' => $member->user->email,
+                        'name' => $member->user->name,
+                        'attendance_status' => $member->user_id === $this->userId ? GuestStatus::Confirmed->value : GuestStatus::Pending->value,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ])->all();
+
+                    if ($guests !== []) {
+                        $booking->guests()->insert($guests);
+                    }
+                }
             }
         }, 2);
     }
@@ -69,7 +97,7 @@ class CreateRecurringBookings implements ShouldQueue
     public function failed(Throwable $exception): void
     {
         logger()->error('Create recurring booking failed', [
-            'email' => $this->occurrence['starts_at'],
+            'recurrenceId' => $this->recurrenceId,
             'reason' => $exception->getMessage(),
         ]);
     }

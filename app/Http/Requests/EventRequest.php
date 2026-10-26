@@ -24,7 +24,7 @@ class EventRequest extends FormRequest
     {
         if ($this->isMethod('post')) {
             return [
-                'name' => ['required', 'min:4', 'max:20'],
+                'name' => ['required', 'min:4', 'max:30'],
                 'slug' => [
                     'required',
                     'min:3',
@@ -39,7 +39,7 @@ class EventRequest extends FormRequest
         }
 
         return [
-            'name' => ['nullable', 'string', 'min:4', 'max:20'],
+            'name' => ['nullable', 'string', 'min:4', 'max:30'],
             'slug' => ['nullable', 'string', 'min:3', 'unique:events,slug'],
             'description' => ['nullable', 'string'],
             'color' => ['nullable', 'string'],

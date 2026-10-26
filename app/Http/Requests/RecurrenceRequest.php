@@ -52,10 +52,18 @@ class RecurrenceRequest extends FormRequest
                 'start_time' => ['required', 'date_format:H:i'],
                 'contact_id' => [
                     'nullable',
+                    'required_without:team_id',
                     'integer',
                     Rule::exists('contacts', 'id')->where(
-                        fn (Builder $query): Builder => $query->where('user_id', $this->user()->id),
+                        fn(Builder $query): Builder =>
+                        $query->where('user_id', $this->user()->id),
                     ),
+                ],
+                'team_id' => [
+                    'nullable',
+                    'required_without:contact_id',
+                    'integer',
+                    Rule::exists('teams', 'id'),
                 ],
             ];
         }
