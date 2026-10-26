@@ -30,7 +30,7 @@ class TeamBookingInviteJob implements ShouldQueue
 
     public int $timeout = 60;
 
-    public function __construct(public int $teamId, public int $userId, public int $bookingId, public string $frontendUrl, public bool $isRecurrence) {}
+    public function __construct(public string $teamId, public int $userId, public int $bookingId, public string $frontendUrl, public bool $isRecurrence) {}
 
     public function handle(): void
     {
@@ -45,7 +45,7 @@ class TeamBookingInviteJob implements ShouldQueue
             }
             $booking->loadMissing(['event']);
             if ($this->isRecurrence) {
-                app(NotificationService::class)->send($user, 'booking.created', "New booking for {$booking->event->name}", null, "{$this->frontendUrl}/app/teams/{$this->teamId}?recurrence_id={$booking->id}", ['booking_id' => $booking->id]);
+                app(NotificationService::class)->send($user, 'booking.created', "New booking for {$booking->event->name}", null, "{$this->frontendUrl}/app/teams/{$this->teamId}?recurrence_id={$booking->recurrence_id}", ['booking_id' => $booking->id]);
             } else {
                 app(NotificationService::class)->send($user, 'booking.created', "New booking for {$booking->event->name}", null, "{$this->frontendUrl}/app/teams/{$this->teamId}?booking_id={$booking->id}", ['booking_id' => $booking->id]);
             }

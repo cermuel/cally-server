@@ -102,7 +102,7 @@ class TeamBookingController extends Controller
         }, 2);
 
         DB::afterCommit(function () use ($booking, $team) {
-            $this->automationService->run(AutomationTrigger::ookingCreated, $booking, null);
+            $this->automationService->run(AutomationTrigger::BookingCreated, $booking, null);
             CreateGoogleMeetJob::dispatch($booking->id)->onQueue('meeting');
             $team->loadMissing(['members']);
             $frontendUrl = config('services.frontend_url');

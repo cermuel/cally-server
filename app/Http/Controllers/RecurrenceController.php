@@ -262,7 +262,7 @@ class RecurrenceController extends Controller
                                 ->map(fn(TeamMember $guest): TeamBookingInviteJob => new TeamBookingInviteJob(
                                     $team->slug,
                                     $guest->user_id,
-                                    $recurrence->id,
+                                    $booking->id,
                                     $frontendUrl,
                                     true
                                 ));
