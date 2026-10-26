@@ -67,7 +67,7 @@ class CreateRecurringBookings implements ShouldQueue
                 }
             }
             if ($this->teamId) {
-                $event = Event::findOrFail($booking->eventId);
+                $event = Event::findOrFail($booking->event_id);
                 $team = Team::where('id', $this->teamId)->first();
                 if ($team) {
                     $event->update([
