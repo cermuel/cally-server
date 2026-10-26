@@ -142,23 +142,25 @@ class RecurrenceController extends Controller
             abort(400, 'No meetings fall within the selected dates.');
         }
 
-        $existingBookings = $user->bookings()
-            ->where('status', '!=', 'cancelled')
-            ->whereNotNull('starts_at')
-            ->whereNotNull('ends_at')
-            ->where('starts_at', '<', $occurrences[array_key_last($occurrences)]['ends_at'])
-            ->where('ends_at', '>', $occurrences[0]['starts_at'])
-            ->get(['starts_at', 'ends_at']);
+        if (!isset($body['override'])) {
+            $existingBookings = $user->bookings()
+                ->where('status', '!=', 'cancelled')
+                ->whereNotNull('starts_at')
+                ->whereNotNull('ends_at')
+                ->where('starts_at', '<', $occurrences[array_key_last($occurrences)]['ends_at'])
+                ->where('ends_at', '>', $occurrences[0]['starts_at'])
+                ->get(['starts_at', 'ends_at']);
 
-        $hasConflict = collect($occurrences)->contains(function (array $occurrence) use ($existingBookings): bool {
-            return $existingBookings->contains(function ($booking) use ($occurrence): bool {
-                return $booking->starts_at->lessThan($occurrence['ends_at'])
-                    && $booking->ends_at->greaterThan($occurrence['starts_at']);
+            $hasConflict = collect($occurrences)->contains(function (array $occurrence) use ($existingBookings): bool {
+                return $existingBookings->contains(function ($booking) use ($occurrence): bool {
+                    return $booking->starts_at->lessThan($occurrence['ends_at'])
+                        && $booking->ends_at->greaterThan($occurrence['starts_at']);
+                });
             });
-        });
 
-        if ($hasConflict) {
-            abort(409, 'One or more meeting times are already reserved.');
+            if ($hasConflict) {
+                abort(409, 'One or more meeting times are already reserved.');
+            }
         }
 
         $recurrence = DB::transaction(function () use (

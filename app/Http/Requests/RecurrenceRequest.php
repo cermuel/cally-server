@@ -30,6 +30,7 @@ class RecurrenceRequest extends FormRequest
                 'event_id' => ['required', 'integer'],
                 'frequency' => ['required', Rule::enum(RecurrenceFrequency::class)],
                 'interval' => ['required', 'integer', 'min:1'],
+                'override' => ['boolean', 'nullable'],
                 'days_of_week' => [
                     'exclude_unless:frequency,weekly',
                     'required',
