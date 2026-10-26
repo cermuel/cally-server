@@ -64,13 +64,21 @@ class TeamController extends Controller
     public function show(Request $request, string $id)
     {
         $user = $request->user();
-        $team = Team::with(['owner', 'members.user'])->where('id', $id)
+        $team = Team::with(['owner', 'members.user'])
+            ->where(function ($query) use ($id) {
+                $query->where('slug', $id);
+
+                if (ctype_digit((string) $id)) {
+                    $query->orWhere('id', $id);
+                }
+            })
             ->where(function ($query) use ($user) {
                 $query->where('owner_id', $user->id)
                     ->orWhereHas('members', function ($q) use ($user) {
                         $q->where('user_id', $user->id);
                     });
-            })->first();
+            })
+            ->first();
 
         if (! $team) {
             return response()->json(['message' => 'Team not found'], 404);

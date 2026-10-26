@@ -57,6 +57,8 @@ class Booking extends Model
             $query->whereDate('starts_at', $date);
         })->when($filters['event_id'] ?? null, function ($query, $event) {
             $query->where('event_id', $event);
+        })->whereHas('event', function ($query) {
+            $query->whereNull('recurrence_id');
         });
     }
 

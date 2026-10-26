@@ -35,7 +35,7 @@ class TeamBookingController extends Controller
 
         $filters = $request->only(['status', 'provider_id', 'date', 'event_id']);
 
-        $bookings = Booking::with(['guests', 'event'])->whereHas('event', function ($query) use ($teamId) {
+        $bookings = Booking::with(['guests', 'event', 'guests.user'])->whereHas('event', function ($query) use ($teamId) {
             $query->where('team_id', $teamId);
         })->filter($filters)->latest()->paginate();
 
@@ -84,7 +84,7 @@ class TeamBookingController extends Controller
             $event = $user->events()->create($newEvent);
             $booking = $event->bookings()->create($newBooking);
 
-            $guests = $team->members->map(fn ($member) => [
+            $guests = $team->members->map(fn($member) => [
                 'booking_id' => $booking->id,
                 'user_id' => $member->user_id,
                 'email' => $member->user->email,
@@ -107,7 +107,7 @@ class TeamBookingController extends Controller
             $team->loadMissing(['members']);
             $frontendUrl = config('services.frontend_url');
             $invitationJobs = $team->members
-                ->map(fn (TeamMember $guest): TeamBookingInviteJob => new TeamBookingInviteJob(
+                ->map(fn(TeamMember $guest): TeamBookingInviteJob => new TeamBookingInviteJob(
                     $guest->team_id,
                     $guest->user_id,
                     $booking->id,
@@ -137,7 +137,7 @@ class TeamBookingController extends Controller
         }
         $this->authorizeTeamAccess($user, $team);
 
-        $booking = $team->bookings()->with(['event', 'guests'])->where('bookings.id', $bookingId)->first();
+        $booking = $team->bookings()->with(['event', 'guests', 'guests.user'])->where('bookings.id', $bookingId)->first();
         if (! $booking) {
             abort(404, 'Booking not found');
         }
@@ -262,9 +262,9 @@ class TeamBookingController extends Controller
 
         $canManageBooking = $team->owner_id === $user->id
             || $team->members()
-                ->whereBelongsTo($user)
-                ->where('role', TeamRole::Admin->value)
-                ->exists();
+            ->whereBelongsTo($user)
+            ->where('role', TeamRole::Admin->value)
+            ->exists();
 
         abort_unless($canManageBooking, 403, 'You do not have permission to manage team meetings.');
     }

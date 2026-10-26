@@ -39,6 +39,7 @@ class BookingDetailsResource extends JsonResource
                 fn(): array => [
                     'id' => $this->event->id,
                     'name' => $this->event->name,
+                    'description' => $this->event->description,
                     'slug' => $this->event->slug,
                     'duration_minutes' => $this->event->duration_minutes,
                 ],
@@ -75,6 +76,16 @@ class BookingDetailsResource extends JsonResource
                         'attendance_status' => $guest->attendance_status,
                         'created_at' => $guest->created_at->toISOString(),
                         'updated_at' => $guest->updated_at->toISOString(),
+                        'user_id' => $guest->user_id,
+                        'user' => $guest->relationLoaded('user')
+                            ? [
+                                'id' => $guest->user->id,
+                                'name' => $guest->user->name,
+                                'email' => $guest->user->email,
+                                'avatar_url' => $guest->user->avatar_url,
+                                'timezone' => $guest->user->timezone
+                            ]
+                            : null,
                     ])
                     ->values(),
             ),
