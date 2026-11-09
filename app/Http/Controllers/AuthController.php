@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest;
 use App\Http\Resources\UserResource;
 use App\Jobs\ResetPasswordEmailJob;
+use App\Jobs\SendOTPJob;
 use App\Jobs\VerifyEmailJob;
+use App\Models\Otp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,18 +15,44 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    public $MAX_OTP_ATTEMPTS = 3;
+
     protected function resendVerifyEmail(User $user)
     {
-
         $emailToken = Str::random(12);
         $emailTokenHashed = Hash::make($emailToken);
         $emailExpiresAt = now()->addHour();
         $frontendUrl = config('services.frontend_url');
-        $verifyUrl = $frontendUrl . '/auth/verify-email?token=' . $emailToken . '&email=' . $user->email;
+        $verifyUrl = $frontendUrl.'/auth/verify-email?token='.$emailToken.'&email='.$user->email;
 
-        if ($user->email_verified_at !== null) return;
+        if ($user->email_verified_at !== null) {
+            return;
+        }
         $user->update(['email_token' => $emailTokenHashed, 'email_token_expires_at' => $emailExpiresAt]);
         VerifyEmailJob::dispatch($user->email, $verifyUrl);
+    }
+
+    public function generateOTP(User $user, ?string $title, ?string $purpose = 'login')
+    {
+        $code = Str::padLeft((string) random_int(0, 999999), 6, '0');
+        $codeHashed = Hash::make($code);
+        $challengeId = Str::random(12);
+        $codeExpiresAt = now()->addMinutes(10);
+
+        $user->otps()->delete();
+
+        $user->otps()->create(
+            [
+                'code' => $codeHashed,
+                'challenge_id' => $challengeId,
+                'attempts' => 0,
+                'expires_at' => $codeExpiresAt,
+                'purpose' => $purpose,
+            ]
+        );
+        SendOTPJob::dispatch($user->email, $code, $challengeId, $title ?? 'Login with your OTP');
+
+        return $challengeId;
     }
 
     public function login(Request $request)
@@ -46,6 +74,12 @@ class AuthController extends Controller
             $this->resendVerifyEmail($user);
 
             return response()->json(['message' => 'Email sent successfully', 'user' => new UserResource($user)], 200);
+        }
+
+        if ($user->two_factor_enabled) {
+            $challengeId = $this->generateOTP($user, null);
+
+            return response()->json(['message' => 'OTP sent successfully', 'challenge_id' => $challengeId], 200);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -117,7 +151,7 @@ class AuthController extends Controller
             $resetPasswordTokenHashed = Hash::make($resetPasswordToken);
             $resetPasswordExpiresAt = now()->addHour();
             $frontendUrl = config('services.frontend_url');
-            $resetPasswordUrl = $frontendUrl . '/auth/reset-password?token=' . $resetPasswordToken . '&email=' . $user->email;
+            $resetPasswordUrl = $frontendUrl.'/auth/reset-password?token='.$resetPasswordToken.'&email='.$user->email;
 
             $user->update(['reset_password_token' => $resetPasswordTokenHashed, 'reset_password_token_expires_at' => $resetPasswordExpiresAt]);
 
@@ -145,6 +179,36 @@ class AuthController extends Controller
         $user->update(['password' => Hash::make($body['password']), 'reset_password_token' => null, 'reset_password_token_expires_at' => null]);
 
         return response()->json(['message' => 'Reset email sent successfully']);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $body = $request->validate(
+            [
+                'challenge_id' => ['string', 'required'],
+                'code' => ['string', 'required'],
+            ]
+        );
+
+        $otp = Otp::where('challenge_id', $body['challenge_id'])->where('purpose', 'login')->first();
+
+        if (! $otp || now()->greaterThan($otp->expires_at) || $otp->attempts >= $this->MAX_OTP_ATTEMPTS) {
+            return response()->json(['message' => 'Invalid or expired code'], 400);
+        }
+
+        $otp->increment('attempts');
+
+        if (! Hash::check($body['code'], $otp->code)) {
+            return response()->json(['message' => 'Invalid or expired code'], 400);
+        }
+
+        $otp->loadMissing(['user']);
+        $user = $otp->user;
+        $otp->delete();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json(['message' => 'Login successful', 'user' => new UserResource($user), 'token' => $token]);
     }
 
     public function logout(Request $request)

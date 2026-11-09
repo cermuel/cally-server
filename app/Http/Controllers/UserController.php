@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct(public AuthController $authController) {}
+
     protected array $meetings = [
         [
             'name' => '15 min meeting',
@@ -127,6 +129,58 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Onboarding completed successfully',
             'user' => new UserResource(($request->user())),
+        ]);
+    }
+
+    public function setup2FA(Request $request)
+    {
+        $body = $request->validate(['two_factor_enabled' => ['required', 'boolean']]);
+        $user = $request->user();
+        $enable = $body['two_factor_enabled'];
+
+        if ($enable === (bool) $user->two_factor_enabled) {
+            return response()->json(['message' => 'OTP updated successfully'], 200);
+        }
+
+        $challengeId = $this->authController->generateOTP(
+            $user,
+            $enable ? 'Confirm enabling two-factor authentication' : 'Confirm disabling two-factor authentication',
+            $enable ? 'enable_2fa' : 'disable_2fa'
+        );
+
+        return response()->json(['message' => 'OTP sent successfully', 'challenge_id' => $challengeId]);
+    }
+
+    public function confirm2FA(Request $request)
+    {
+        $user = $request->user();
+        $body = $request->validate([
+            'challenge_id' => ['required', 'string'],
+            'code' => ['required', 'string'],
+        ]);
+
+        $otp = $user->otps()
+            ->where('challenge_id', $body['challenge_id'])
+            ->whereIn('purpose', ['enable_2fa', 'disable_2fa'])
+            ->first();
+
+        if (! $otp || $otp->expires_at->isPast() || $otp->attempts >= $this->authController->MAX_OTP_ATTEMPTS) {
+            return response()->json(['message' => 'Invalid or expired code'], 400);
+        }
+
+        $otp->increment('attempts');
+
+        if (! Hash::check($body['code'], $otp->code)) {
+            return response()->json(['message' => 'Invalid or expired code'], 400);
+        }
+
+        $enabled = $otp->purpose === 'enable_2fa';
+        $user->update(['two_factor_enabled' => $enabled]);
+        $user->otps()->delete();
+
+        return response()->json([
+            'message' => $enabled ? '2FA enabled successfully' : '2FA disabled successfully',
+            'user' => new UserResource($user),
         ]);
     }
 

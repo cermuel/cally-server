@@ -12,7 +12,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory;
 
-    protected $fillable = ['email', 'notification_preference', 'name', 'username', 'avatar_url', 'password', 'reset_password_token', 'reset_password_token_expires_at', 'onboarding_completed_at', 'email_verified_at', 'email_token', 'email_token_expires_at', 'description', 'timezone'];
+    protected $fillable = ['email', 'notification_preference', 'name', 'username', 'avatar_url', 'password', 'reset_password_token', 'reset_password_token_expires_at', 'onboarding_completed_at', 'email_verified_at', 'email_token', 'email_token_expires_at', 'description', 'timezone', 'two_factor_enabled'];
 
     public function events()
     {
@@ -82,6 +82,11 @@ class User extends Authenticatable
     public function rescheduleResponses(): HasMany
     {
         return $this->hasMany(RescheduleResponse::class);
+    }
+
+    public function otps(): HasMany
+    {
+        return $this->hasMany(Otp::class);
     }
 
     public function notificationPreferences(): array

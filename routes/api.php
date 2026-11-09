@@ -36,6 +36,8 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::get('/resend-email', [AuthController::class, 'resendEmail']);
 Route::get('/verify-email', [AuthController::class, 'verifyEmail']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])
+    ->middleware('throttle:10,1');
 
 Route::get('/google/redirect', [GoogleAuthController::class, 'redirect']);
 Route::get('/google/callback', [GoogleAuthController::class, 'callback']);
@@ -66,6 +68,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/check-username', [UserController::class, 'checkUsername']);
     Route::patch('/users/edit-profile', [UserController::class, 'update']);
     Route::patch('/users/change-password', [UserController::class, 'changePassword']);
+    Route::patch('/users/setup-two-factor', [UserController::class, 'setup2FA'])->middleware('throttle:10,1');
+    Route::patch('/users/confirm-two-factor', [UserController::class, 'confirm2FA'])->middleware('throttle:10,1');
     Route::patch('/users/complete-onboarding', [UserController::class, 'completeOnboarding']);
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.count');

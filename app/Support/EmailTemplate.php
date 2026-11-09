@@ -26,6 +26,16 @@ class EmailTemplate
         ])->render();
     }
 
+    public static function otp(
+        string $code,
+        string $expiresIn = 'ten minutes',
+    ): string {
+        return view('emails.otp', [
+            'code' => $code,
+            'expiresIn' => $expiresIn,
+        ])->render();
+    }
+
     public static function welcome(string $name, string $dashboardUrl): string
     {
         return view('emails.welcome', [
