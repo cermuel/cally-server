@@ -88,7 +88,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('teams', TeamController::class);
     Route::apiResource('/teams/{teamId}/bookings', TeamBookingController::class)
         ->parameters(['bookings' => 'bookingId'])
-        ->whereNumber(['teamId', 'bookingId']);
+        ->whereNumber(['teamId', 'bookingId'])
+        ->names([
+            'index'   => 'teams.bookings.index',
+            'store'   => 'teams.bookings.store',
+            'show'    => 'teams.bookings.show',
+            'update'  => 'teams.bookings.update',
+            'destroy' => 'teams.bookings.destroy',
+        ]);
     Route::get('/teams/{team}/members', [TeamMemberController::class, 'index'])->whereNumber('team');
     Route::patch('/teams/{team}/members/{member}', [TeamMemberController::class, 'update'])->whereNumber(['team', 'member'])->scopeBindings();
     Route::delete('/teams/{team}/members/{member}', [TeamMemberController::class, 'destroy'])->whereNumber(['team', 'member'])->scopeBindings();
